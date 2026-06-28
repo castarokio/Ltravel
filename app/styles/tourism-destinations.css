@@ -1,0 +1,406 @@
+/* ──────────────────────────────────────────────────────────────────────────
+   TOURISM DESTINATIONS HOME SECTION & DYNAMIC PAGES
+   ────────────────────────────────────────────────────────────────────────── */
+
+.tourism-destinations-section {
+  background: #ffffff;
+  padding: 96px 0;
+}
+
+.destinations-masonry-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.92fr 0.92fr;
+  grid-template-rows: 240px 240px;
+  gap: 28px;
+  margin: 48px 0;
+}
+
+.dest-grid-card {
+  position: relative;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(8, 8, 8, 0.02);
+  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 180ms ease;
+  cursor: pointer;
+  display: flex;
+}
+
+.dest-grid-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 82, 204, 0.08);
+}
+
+.dest-grid-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  inset: 0;
+  transition: transform 140ms cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1;
+}
+
+.dest-grid-card:hover img {
+  transform: scale(1.06);
+}
+
+.dest-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(8, 8, 8, 0) 50%, rgba(8, 8, 8, 0.45) 100%);
+  transition: background 180ms cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 2;
+}
+
+.dest-grid-card:hover .dest-card-overlay {
+  background: rgba(8, 8, 8, 0.65);
+}
+
+.dest-card-content {
+  position: absolute;
+  inset: 0;
+  color: #ffffff;
+  z-index: 3;
+  height: 100%;
+}
+
+.dest-card-title-wrap {
+  position: absolute;
+  bottom: 32px;
+  left: 32px;
+  right: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.dest-card-title-wrap h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2.5vw, 26px);
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.15;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
+  transition: text-shadow 160ms ease, transform 160ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dest-grid-card:hover .dest-card-title-wrap h3 {
+  text-shadow: 0 4px 14px rgba(0, 0, 0, 0.95);
+  transform: translateY(-2px);
+}
+
+.dest-card-center-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.6) rotate(-45deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary);
+  color: #ffffff;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  box-shadow: 0 6px 20px rgba(0, 82, 204, 0.35);
+  opacity: 0;
+  transition: opacity 180ms cubic-bezier(0.34, 1.56, 0.64, 1), transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1), background-color 160ms ease, box-shadow 160ms ease;
+  z-index: 3;
+}
+
+.dest-grid-card:hover .dest-card-center-btn {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1) rotate(0deg);
+}
+
+.dest-card-center-btn:hover {
+  background: #0043a4;
+  box-shadow: 0 8px 24px rgba(0, 82, 204, 0.55);
+}
+
+.dest-card-tagline {
+  font-size: 11px;
+  color: var(--yellow);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+
+.dest-card-desc {
+  margin: 0;
+  font-size: 13px;
+  opacity: 0.88;
+  line-height: 1.45;
+  max-width: 290px;
+}
+
+/* Individual Grid Positions */
+.dest-card-maldives {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+}
+
+.dest-card-japon {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.dest-card-suisse {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.dest-card-tanzanie {
+  grid-column: 3;
+  grid-row: 1;
+  height: 100%;
+}
+
+/* Bottom CTA Styles */
+.destinations-bottom-cta {
+  text-align: center;
+  margin-top: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.destinations-bottom-cta p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 500;
+  max-width: 460px;
+  line-height: 1.5;
+}
+
+/* Destination Subpage */
+.destination-subpage {
+  padding-bottom: 96px;
+}
+
+.destination-subpage .utility-card {
+  max-width: 100%;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+}
+
+.dest-subpage-hero {
+  height: 480px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  text-align: center;
+  border-radius: 0 0 32px 32px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(8, 8, 8, 0.08);
+}
+
+.dest-subpage-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(8, 8, 8, 0.35) 0%, rgba(8, 8, 8, 0.75) 100%);
+  z-index: 1;
+}
+
+.dest-subpage-hero .container {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+}
+
+.dest-subpage-hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(38px, 6vw, 62px);
+  font-weight: 900;
+  margin: 0 0 12px;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.dest-subpage-hero p {
+  font-size: 16px;
+  opacity: 0.95;
+  line-height: 1.55;
+  margin: 0;
+  color: var(--yellow);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.dest-intro-section {
+  padding: 86px 0 54px;
+  text-align: center;
+}
+
+.dest-intro-content {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.dest-intro-content p {
+  font-size: 16px;
+  line-height: 1.75;
+  color: #374151;
+  font-weight: 500;
+}
+
+.dest-sights-section {
+  padding: 54px 0 86px;
+  background: #fbfbfd;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.dest-sights-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  margin-top: 48px;
+}
+
+.sight-card {
+  background: #ffffff;
+  border: 1px solid rgba(8, 8, 8, 0.04);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 24px rgba(8, 8, 8, 0.02);
+  transition: transform 160ms ease, box-shadow 160ms ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.sight-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 18px 36px rgba(8, 8, 8, 0.05);
+}
+
+.sight-image-wrap {
+  height: 200px;
+  position: relative;
+}
+
+.sight-image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sight-content {
+  padding: 24px;
+  flex-grow: 1;
+}
+
+.sight-content h3 {
+  margin: 0 0 10px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.sight-content p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.dest-cta-section {
+  padding: 86px 0;
+  text-align: center;
+}
+
+.dest-cta-card {
+  background: radial-gradient(circle at 10% 20%, rgba(0, 82, 204, 0.03) 0%, transparent 60%), #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 54px;
+  max-width: 800px;
+  margin: 0 auto;
+  box-shadow: 0 16px 36px rgba(8, 8, 8, 0.03);
+}
+
+.dest-cta-card h2 {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 800;
+  margin: 0 0 16px;
+}
+
+.dest-cta-card p {
+  color: var(--muted);
+  font-size: 14px;
+  max-width: 520px;
+  margin: 0 auto 32px;
+  line-height: 1.6;
+}
+
+.dest-cta-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.whatsapp-btn {
+  background: #25d366 !important;
+  color: #ffffff !important;
+  box-shadow: 0 8px 18px rgba(37, 211, 102, 0.28) !important;
+}
+
+.whatsapp-btn:hover {
+  background: #20ba56 !important;
+  box-shadow: 0 10px 22px rgba(37, 211, 102, 0.38) !important;
+}
+
+/* Responsive Overrides */
+@media (max-width: 1024px) {
+  .destinations-masonry-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto;
+    gap: 20px;
+  }
+  .dest-grid-card {
+    grid-column: span 1 !important;
+    grid-row: auto !important;
+    height: 280px;
+  }
+  .dest-sights-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .destinations-masonry-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .dest-grid-card {
+    height: 240px;
+  }
+  .dest-sights-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .dest-cta-card {
+    padding: 32px 20px;
+  }
+  .dest-subpage-hero {
+    height: 380px;
+  }
+}
+
+

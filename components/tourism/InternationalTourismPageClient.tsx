@@ -3,37 +3,20 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import { ArrowLeft, Award, Check, Plane, Send, ShieldCheck, Star } from "lucide-react";
+import { ArrowLeft, Award, Check, Plane, ShieldCheck, Star } from "lucide-react";
 import { MotionPageShell } from "@/components/MotionPageShell";
 import { asset, intlPackages } from "@/lib/site-data";
+import { InquiryForm } from "./InquiryForm";
 
 export default function InternationalTourismPageClient() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [selectedPkg, setSelectedPkg] = useState(intlPackages[0].id);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    travelers: "1",
-    date: "",
-    notes: ""
-  });
-  const [submitted, setSubmitted] = useState(false);
 
   const categories = ["All", "Europe", "Asia", "Tropical", "Adventure"];
 
   const filteredPackages = activeCategory === "All" 
     ? intlPackages 
     : intlPackages.filter(p => p.category === activeCategory);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.name || !formData.email || !formData.phone) {
-      alert("Veuillez remplir tous les champs obligatoires (Nom, Email, Téléphone).");
-      return;
-    }
-    setSubmitted(true);
-  };
 
   const handleSelectPkg = (pkgId: string) => {
     setSelectedPkg(pkgId);
@@ -43,7 +26,7 @@ export default function InternationalTourismPageClient() {
     }
   };
 
-  const activePkgObj = intlPackages.find(p => p.id === selectedPkg) || intlPackages[0];
+  const formOptions = intlPackages.map((p) => ({ id: p.id, title: p.title }));
 
   return (
     <MotionPageShell className="service-page-shell international-tourism-page-shell">
@@ -164,122 +147,27 @@ export default function InternationalTourismPageClient() {
               </div>
             </div>
 
-            {/* Right Col - Form */}
-            <div className="inquiry-form-card">
-              {!submitted ? (
-                <form onSubmit={handleSubmit}>
-                  <div className="form-row">
-                    <div className="form-group">
-                      <label htmlFor="name">Nom Complet *</label>
-                      <input 
-                        type="text" 
-                        id="name" 
-                        required 
-                        value={formData.name}
-                        onChange={(e) => setFormData({...formData, name: e.target.value})}
-                        placeholder="Alice Martin" 
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label htmlFor="email">Adresse E-mail *</label>
-                      <input 
-                        type="email" 
-                        id="email" 
-                        required 
-                        value={formData.email}
-                        onChange={(e) => setFormData({...formData, email: e.target.value})}
-                        placeholder="alice.martin@example.com" 
-                      />
-                    </div>
-                  </div>
-
-                  <div className="form-row">
-                    <div className="form-group">
-                      <label htmlFor="phone">Téléphone *</label>
-                      <input 
-                        type="tel" 
-                        id="phone" 
-                        required 
-                        value={formData.phone}
-                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                        placeholder="+33 7 98 76 54 32" 
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label htmlFor="pkg">Destination souhaitée</label>
-                      <select 
-                        id="pkg"
-                        value={selectedPkg}
-                        onChange={(e) => setSelectedPkg(e.target.value)}
-                      >
-                        {intlPackages.map((p) => (
-                          <option key={p.id} value={p.id}>{p.title}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="form-row">
-                    <div className="form-group">
-                      <label htmlFor="travelers">Nombre de voyageurs</label>
-                      <select 
-                        id="travelers"
-                        value={formData.travelers}
-                        onChange={(e) => setFormData({...formData, travelers: e.target.value})}
-                      >
-                        <option value="1">1 Personne</option>
-                        <option value="2">2 Personnes (Couple)</option>
-                        <option value="3-5">Famille (3-5 pers.)</option>
-                        <option value="6+">Groupe (6+ pers.)</option>
-                      </select>
-                    </div>
-                    <div className="form-group">
-                      <label htmlFor="date">Date estimée de départ</label>
-                      <input 
-                        type="date" 
-                        id="date" 
-                        value={formData.date}
-                        onChange={(e) => setFormData({...formData, date: e.target.value})}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="form-group full-width">
-                    <label htmlFor="notes">Précisions supplémentaires (Hôtel de préférence, classe affaire, escales...)</label>
-                    <textarea 
-                      id="notes" 
-                      rows={3} 
-                      value={formData.notes}
-                      onChange={(e) => setFormData({...formData, notes: e.target.value})}
-                      placeholder="Ex: lit double requis, hôtel vue mer ou centre-ville, préférence de vol direct..."
-                    />
-                  </div>
-
-                  <button className="button" type="submit" style={{ width: "100%", marginTop: "8px" }}>
-                    <Send size={16} /> Envoyer ma demande de voyage
-                  </button>
-                </form>
-              ) : (
-                <div className="form-success-box">
-                  <div className="form-success-icon">
-                    <Check size={28} />
-                  </div>
-                  <h3>Demande Enregistrée !</h3>
-                  <p style={{ marginBottom: "20px" }}>
-                    Merci <strong>{formData.name}</strong>. Votre dossier pour le package international <strong>&quot;{activePkgObj.title}&quot;</strong> a été transmis à notre service de réservation.
-                  </p>
-                  <div style={{ background: "#f8fafc", border: "1px dashed var(--border)", borderRadius: "12px", padding: "16px", width: "100%", fontSize: "12px", textAlign: "left", marginBottom: "24px", color: "var(--text)" }}>
-                    <div style={{ marginBottom: "6px" }}><strong>Package :</strong> {activePkgObj.title} ({activePkgObj.duration})</div>
-                    <div style={{ marginBottom: "6px" }}><strong>Voyageurs :</strong> {formData.travelers === "2" ? "2 personnes (Couple)" : formData.travelers === "1" ? "1 voyageur" : formData.travelers}</div>
-                    {formData.date && <div style={{ marginBottom: "6px" }}><strong>Date :</strong> {formData.date}</div>}
-                    <div><strong>Traitement :</strong> Un expert en vols internationaux étudie votre demande pour vous proposer le meilleur tarif et le meilleur itinéraire. Réponse sous 24h.</div>
-                  </div>
-                  <button className="button button-ghost" onClick={() => setSubmitted(false)}>
-                    Calculer un autre tarif
-                  </button>
-                </div>
+            {/* Right Col - Shared Form */}
+            <InquiryForm
+              options={formOptions}
+              selectedOption={selectedPkg}
+              setSelectedOption={setSelectedPkg}
+              optionLabel="Destination souhaitée"
+              notesLabel="Précisions supplémentaires (Hôtel de préférence, classe affaire, escales...)"
+              notesPlaceholder="Ex: lit double requis, hôtel vue mer ou centre-ville, préférence de vol direct..."
+              submitBtnText="Envoyer ma demande de voyage"
+              successMessage={(formData, activeTitle) => (
+                <p style={{ marginBottom: "20px" }}>
+                  Merci <strong>{formData.name}</strong>. Votre dossier pour le package international <strong>&quot;{activeTitle}&quot;</strong> a été transmis à notre service de réservation.
+                  <span style={{ display: "block", background: "#f8fafc", border: "1px dashed var(--border)", borderRadius: "12px", padding: "16px", marginTop: "16px", fontSize: "12px", textAlign: "left", color: "var(--text)" }}>
+                    <span style={{ display: "block", marginBottom: "6px" }}><strong>Package :</strong> {activeTitle}</span>
+                    <span style={{ display: "block", marginBottom: "6px" }}><strong>Voyageurs :</strong> {formData.travelers === "2" ? "2 personnes (Couple)" : formData.travelers === "1" ? "1 voyageur" : formData.travelers}</span>
+                    {formData.date && <span style={{ display: "block", marginBottom: "6px" }}><strong>Date :</strong> {formData.date}</span>}
+                    <span style={{ display: "block" }}><strong>Traitement :</strong> Un expert en vols internationaux étudie votre demande pour vous proposer le meilleur tarif et le meilleur itinéraire. Réponse sous 24h.</span>
+                  </span>
+                </p>
               )}
-            </div>
+            />
           </div>
         </div>
       </section>

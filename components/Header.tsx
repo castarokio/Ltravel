@@ -7,6 +7,7 @@ import { ChevronDown, Menu, X } from "lucide-react";
 import { navItems } from "@/lib/site-data";
 import { Logo } from "@/components/Logo";
 import { shouldReduceMotion } from "@/components/home/animation";
+import { getNavStairOffset } from "./NavStairOffsets";
 
 export function Header() {
   const [open, setOpen] = useState(false);
@@ -18,34 +19,47 @@ export function Header() {
     if (!headerRef.current || shouldReduceMotion()) return;
 
     const context = gsap.context(() => {
+      // Set initial values
       gsap.set(".brand-link, .desktop-actions > *, .desktop-nav .nav-item", { opacity: 0 });
       gsap.set(".brand-link", { y: -10 });
       gsap.set(".desktop-actions > *", { y: -8 });
-      gsap.set(".nav-stair", { y: (index: number) => 18 - index * 6, x: (index: number) => -10 + index * 5 });
+      
+      // Set initial state of non-stair nav items
       gsap.set(".desktop-nav .nav-item:not(.nav-stair)", { y: -8 });
 
-      gsap
-        .timeline({ defaults: { ease: "power3.out" } })
-        .to(".brand-link", { opacity: 1, y: 0, duration: 0.36 }, 0)
-        .to(".nav-stair", {
+      // Set initial state of stair nav items (they start slightly lower and left of their final positions)
+      const stairElements = headerRef.current?.querySelectorAll(".nav-stair");
+      stairElements?.forEach((el, index) => {
+        const offset = getNavStairOffset(index);
+        gsap.set(el, { y: offset.y + 10, x: offset.x - 10, opacity: 0 });
+      });
+
+      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+      tl.to(".brand-link", { opacity: 1, y: 0, duration: 0.36 }, 0);
+
+      // Animate stair elements to their respective target offsets
+      stairElements?.forEach((el, index) => {
+        const offset = getNavStairOffset(index);
+        tl.to(el, {
           opacity: 1,
-          x: 0,
-          y: 0,
-          duration: 0.48,
-          stagger: 0.07
-        }, 0.06)
-        .to(".desktop-nav .nav-item:not(.nav-stair)", {
-          opacity: 1,
-          y: 0,
-          duration: 0.34,
-          stagger: 0.035
-        }, 0.22)
-        .to(".desktop-actions > *", {
-          opacity: 1,
-          y: 0,
-          duration: 0.34,
-          stagger: 0.05
-        }, 0.28);
+          x: offset.x,
+          y: offset.y,
+          duration: 0.48
+        }, 0.06 + index * 0.07);
+      });
+
+      tl.to(".desktop-nav .nav-item:not(.nav-stair)", {
+        opacity: 1,
+        y: 0,
+        duration: 0.34,
+        stagger: 0.035
+      }, 0.22)
+      .to(".desktop-actions > *", {
+        opacity: 1,
+        y: 0,
+        duration: 0.34,
+        stagger: 0.05
+      }, 0.28);
     }, headerRef);
 
     return () => context.revert();

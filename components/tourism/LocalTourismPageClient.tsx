@@ -3,41 +3,23 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import { ArrowLeft, Award, Check, Compass, Phone, Send, Star } from "lucide-react";
+import { ArrowLeft, Award, Check, Compass, Phone, Star } from "lucide-react";
 import { MotionPageShell } from "@/components/MotionPageShell";
 import { asset, localTours } from "@/lib/site-data";
+import { InquiryForm } from "./InquiryForm";
 
 export default function LocalTourismPageClient() {
   const [selectedTour, setSelectedTour] = useState(localTours[0].id);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    travelers: "1",
-    date: "",
-    notes: ""
-  });
-  const [submitted, setSubmitted] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.name || !formData.email || !formData.phone) {
-      alert("Veuillez remplir tous les champs obligatoires (Nom, Email, Téléphone).");
-      return;
-    }
-    setSubmitted(true);
-  };
 
   const handleSelectTour = (tourId: string) => {
     setSelectedTour(tourId);
-    // Scroll down to form
     const formSection = document.getElementById("inquiry-form-section");
     if (formSection) {
       formSection.scrollIntoView({ behavior: "smooth" });
     }
   };
 
-  const activeTourObj = localTours.find(t => t.id === selectedTour) || localTours[0];
+  const formOptions = localTours.map((t) => ({ id: t.id, title: t.title }));
 
   return (
     <MotionPageShell className="service-page-shell local-tourism-page-shell">
@@ -134,121 +116,26 @@ export default function LocalTourismPageClient() {
               </div>
             </div>
 
-            {/* Right Col - Form */}
-            <div className="inquiry-form-card">
-              {!submitted ? (
-                <form onSubmit={handleSubmit}>
-                  <div className="form-row">
-                    <div className="form-group">
-                      <label htmlFor="name">Nom Complet *</label>
-                      <input 
-                        type="text" 
-                        id="name" 
-                        required 
-                        value={formData.name}
-                        onChange={(e) => setFormData({...formData, name: e.target.value})}
-                        placeholder="Jean Dupont" 
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label htmlFor="email">Adresse E-mail *</label>
-                      <input 
-                        type="email" 
-                        id="email" 
-                        required 
-                        value={formData.email}
-                        onChange={(e) => setFormData({...formData, email: e.target.value})}
-                        placeholder="jean.dupont@example.com" 
-                      />
-                    </div>
-                  </div>
-
-                  <div className="form-row">
-                    <div className="form-group">
-                      <label htmlFor="phone">Téléphone *</label>
-                      <input 
-                        type="tel" 
-                        id="phone" 
-                        required 
-                        value={formData.phone}
-                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                        placeholder="+33 6 12 34 56 78" 
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label htmlFor="tour">Circuit Sélectionné</label>
-                      <select 
-                        id="tour"
-                        value={selectedTour}
-                        onChange={(e) => setSelectedTour(e.target.value)}
-                      >
-                        {localTours.map((t) => (
-                          <option key={t.id} value={t.id}>{t.title}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="form-row">
-                    <div className="form-group">
-                      <label htmlFor="travelers">Nombre de voyageurs</label>
-                      <select 
-                        id="travelers"
-                        value={formData.travelers}
-                        onChange={(e) => setFormData({...formData, travelers: e.target.value})}
-                      >
-                        <option value="1">1 Personne</option>
-                        <option value="2">2 Personnes</option>
-                        <option value="3-5">Famille (3-5 pers.)</option>
-                        <option value="6+">Groupe (6+ pers.)</option>
-                      </select>
-                    </div>
-                    <div className="form-group">
-                      <label htmlFor="date">Date de départ souhaitée</label>
-                      <input 
-                        type="date" 
-                        id="date" 
-                        value={formData.date}
-                        onChange={(e) => setFormData({...formData, date: e.target.value})}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="form-group full-width">
-                    <label htmlFor="notes">Demandes spéciales / Remarques</label>
-                    <textarea 
-                      id="notes" 
-                      rows={4} 
-                      value={formData.notes}
-                      onChange={(e) => setFormData({...formData, notes: e.target.value})}
-                      placeholder="Ex: lit bébé nécessaire, allergies alimentaires, vol de nuit..."
-                    />
-                  </div>
-
-                  <button className="button" type="submit" style={{ width: "100%", marginTop: "8px" }}>
-                    <Send size={16} /> Envoyer ma demande
-                  </button>
-                </form>
-              ) : (
-                <div className="form-success-box">
-                  <div className="form-success-icon">
-                    <Check size={28} />
-                  </div>
-                  <h3>Demande Reçue !</h3>
-                  <p style={{ marginBottom: "20px" }}>
-                    Merci <strong>{formData.name}</strong>. Votre demande de renseignements pour le circuit <strong>&quot;{activeTourObj.title}&quot;</strong> a été enregistrée.
-                  </p>
-                  <div style={{ background: "#f8fafc", border: "1px dashed var(--border)", borderRadius: "12px", padding: "16px", width: "100%", fontSize: "12px", textAlign: "left", marginBottom: "24px", color: "var(--text)" }}>
-                    <div style={{ marginBottom: "6px" }}><strong>Voyageurs :</strong> {formData.travelers === "1" ? "1 Voyageur" : formData.travelers === "2" ? "2 Voyageurs" : formData.travelers}</div>
-                    {formData.date && <div style={{ marginBottom: "6px" }}><strong>Départ estimé :</strong> {formData.date}</div>}
-                    <div><strong>Statut :</strong> Un conseiller vous contactera par email ({formData.email}) ou par téléphone ({formData.phone}) sous 24h.</div>
-                  </div>
-                  <button className="button button-ghost" onClick={() => setSubmitted(false)}>
-                    Faire une autre demande
-                  </button>
-                </div>
+            {/* Right Col - Shared Form */}
+            <InquiryForm
+              options={formOptions}
+              selectedOption={selectedTour}
+              setSelectedOption={setSelectedTour}
+              optionLabel="Circuit Sélectionné"
+              notesLabel="Demandes spéciales / Remarques"
+              notesPlaceholder="Ex: lit bébé nécessaire, allergies alimentaires, vol de nuit..."
+              submitBtnText="Envoyer ma demande"
+              successMessage={(formData, activeTitle) => (
+                <p style={{ marginBottom: "20px" }}>
+                  Merci <strong>{formData.name}</strong>. Votre demande de renseignements pour le circuit <strong>&quot;{activeTitle}&quot;</strong> a été enregistrée.
+                  <span style={{ display: "block", background: "#f8fafc", border: "1px dashed var(--border)", borderRadius: "12px", padding: "16px", marginTop: "16px", fontSize: "12px", textAlign: "left", color: "var(--text)" }}>
+                    <span style={{ display: "block", marginBottom: "6px" }}><strong>Voyageurs :</strong> {formData.travelers === "1" ? "1 Voyageur" : formData.travelers === "2" ? "2 Voyageurs" : formData.travelers}</span>
+                    {formData.date && <span style={{ display: "block", marginBottom: "6px" }}><strong>Départ estimé :</strong> {formData.date}</span>}
+                    <span style={{ display: "block" }}><strong>Statut :</strong> Un conseiller vous contactera par email ({formData.email}) ou par téléphone ({formData.phone}) sous 24h.</span>
+                  </span>
+                </p>
               )}
-            </div>
+            />
           </div>
         </div>
       </section>

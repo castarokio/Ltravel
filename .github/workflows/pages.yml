@@ -35,7 +35,7 @@ jobs:
         run: npm run build
         env:
           GITHUB_PAGES: "true"
-          NEXT_PUBLIC_BASE_PATH: "/land"
+          NEXT_PUBLIC_BASE_PATH: "/Ltravel"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

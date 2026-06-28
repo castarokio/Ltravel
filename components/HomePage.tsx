@@ -5,12 +5,10 @@ import { gsap, ScrollTrigger, shouldReduceMotion } from "@/components/home/anima
 import { Hero } from "@/components/home/Hero";
 import { Services } from "@/components/home/Initiatives";
 import { Newsletter } from "@/components/home/Newsletter";
-import {
-  Destinations,
-  OmraSection,
-  Proof,
-  WhyChoose
-} from "@/components/home/HomeSections";
+import { Proof } from "@/components/home/Proof";
+import { OmraSection } from "@/components/home/OmraSection";
+import { Destinations } from "@/components/home/Destinations";
+import { WhyChoose } from "@/components/home/WhyChoose";
 import { TourismDestinations } from "@/components/home/TourismDestinations";
 import { Testimonials } from "@/components/home/Testimonials";
 

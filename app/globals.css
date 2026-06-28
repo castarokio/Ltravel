@@ -153,6 +153,7 @@ img {
 
 .nav-item {
   position: relative;
+  will-change: transform, opacity;
 }
 
 .desktop-nav a,
@@ -177,13 +178,22 @@ img {
   background: linear-gradient(90deg, var(--primary), var(--pink));
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform 180ms ease;
+  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .desktop-nav a:hover,
 .login-link:hover {
   color: var(--primary);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+}
+
+.nav-stair a {
+  transform-origin: left center;
+}
+
+.nav-stair:hover a,
+.nav-stair:focus-within a {
+  transform: translateY(-3px) rotate(-1deg);
 }
 
 .desktop-nav a:hover::after,
@@ -208,6 +218,7 @@ img {
   pointer-events: none;
   transform: translateX(-50%) translateY(8px);
   transition: opacity 160ms ease, transform 160ms ease;
+  will-change: opacity, transform;
 }
 
 .nav-item:hover .nav-dropdown,
@@ -255,6 +266,7 @@ img {
   position: relative;
   overflow: hidden;
   transition: transform 160ms ease, background 160ms ease, box-shadow 160ms ease;
+  will-change: transform;
 }
 
 .button::before {
@@ -268,7 +280,7 @@ img {
 
 .button:hover {
   background: var(--primary-dark);
-  transform: translateY(-1px);
+  transform: translateY(-3px) scale(1.015);
   box-shadow: 0 12px 20px rgba(0, 82, 204, 0.3);
 }
 
@@ -413,6 +425,7 @@ img {
   aspect-ratio: 1 / 1;
   max-width: 660px;
   justify-self: end;
+  will-change: opacity, transform;
 }
 
 /* Soft organic blob backdrop */
@@ -442,8 +455,9 @@ img {
               0 12px 24px -16px rgba(37,99,235,0.25);
   border: 5px solid #ffffff;
   transition: transform 160ms cubic-bezier(.2,.7,.2,1);
+  will-change: transform, opacity;
 }
-.col-img:hover { transform: translateY(-6px) rotate(0deg) !important; }
+.col-img:hover { transform: translateY(-8px) scale(1.02) rotate(0deg) !important; }
 .col-img img, .col-img span { width: 100%; height: 100%; object-fit: cover; display: block; }
 
 /* Asymmetric collage — one anchor + 3 satellites */
@@ -462,6 +476,14 @@ img {
               0 4px 10px -4px rgba(15,23,42,0.12);
   font-size: 0.88rem; font-weight: 600; color: #0b1220;
   white-space: nowrap;
+  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 180ms ease;
+  will-change: transform, opacity;
+}
+
+.chip:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 22px 46px -20px rgba(15,23,42,0.42),
+              0 7px 14px -6px rgba(15,23,42,0.18);
 }
 
 .chip-ico {

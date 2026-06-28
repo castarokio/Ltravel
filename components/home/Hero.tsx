@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { gsap, shouldReduceMotion } from "@/components/home/animation";
 import { SplitLine } from "@/components/home/SplitLine";
 import collageTravel from "../../public/assets/collage-travel.jpg";
@@ -13,38 +13,68 @@ import collageOmra from "../../public/assets/collage-omra.jpg";
 export function Hero() {
   const heroRef = useRef<HTMLElement>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!heroRef.current || shouldReduceMotion()) return;
 
     const context = gsap.context(() => {
-      gsap
-        .timeline({ defaults: { ease: "power2.out" } })
-        .from(".hero-eyebrow", {
-          opacity: 0,
-          y: -8,
-          duration: 0.18
-        })
-        .from(".split-line-inner", {
-          yPercent: 32,
-          duration: 0.22
-        }, "-=0.08")
-        .from(".hero-copy p", { opacity: 0, y: 8, duration: 0.18 }, "-=0.12")
-        .from(".hero-buttons > *", { opacity: 0, y: 6, duration: 0.16 }, "-=0.08")
-        .fromTo(".collage",
-          { opacity: 0 },
-          { opacity: 1, duration: 0.16 },
-          "-=0.12"
-        )
-        .fromTo(".col-img",
-          { opacity: 0, scale: 0.97, y: 8 },
-          { opacity: 1, scale: 1, y: 0, duration: 0.2, ease: "power2.out" },
-          "-=0.08"
-        )
-        .fromTo(".chip",
-          { opacity: 0, scale: 0.97, y: 6 },
-          { opacity: 1, scale: 1, y: 0, duration: 0.16, ease: "power2.out" },
-          "-=0.06"
-        );
+      const planePath = heroRef.current?.querySelector(".plane-path path");
+      const planeText = heroRef.current?.querySelector(".plane-path text");
+
+      if (planePath instanceof SVGPathElement) {
+        const pathLength = planePath.getTotalLength();
+        gsap.set(planePath, {
+          strokeDasharray: pathLength,
+          strokeDashoffset: pathLength
+        });
+      }
+
+      gsap.set(".hero-eyebrow, .hero-copy > p:not(.hero-eyebrow), .hero-buttons > *, .collage, .col-img, .chip", {
+        opacity: 0
+      });
+      gsap.set(".split-line-inner", { yPercent: 104 });
+      gsap.set(".col-img", { scale: 0.94, y: 18, rotate: 0 });
+      gsap.set(".chip", { scale: 0.9, y: 10 });
+      if (planeText) {
+        gsap.set(planeText, { opacity: 0, x: -14 });
+      }
+
+      const timeline = gsap.timeline({
+        defaults: { ease: "power3.out" }
+      });
+
+      timeline
+        .add("hero-in")
+        .to(".hero-eyebrow", { opacity: 1, y: 0, duration: 0.36 }, "hero-in")
+        .to(".split-line-inner", { yPercent: 0, duration: 0.64, stagger: 0.055 }, "hero-in+=0.04")
+        .to(".hero-copy > p:not(.hero-eyebrow)", { opacity: 1, y: 0, duration: 0.42 }, "hero-in+=0.18")
+        .to(".hero-buttons > *", { opacity: 1, y: 0, duration: 0.42, stagger: 0.055 }, "hero-in+=0.25")
+        .to(".collage", { opacity: 1, duration: 0.28 }, "hero-in+=0.02")
+        .to(".col-img", {
+          opacity: 1,
+          scale: 1,
+          y: 0,
+          rotate: (index: number) => [-2, 2.5, -1.5, 1.8][index] ?? 0,
+          duration: 0.72,
+          stagger: {
+            each: 0.055,
+            from: "center"
+          }
+        }, "hero-in+=0.06")
+        .to(".chip", {
+          opacity: 1,
+          scale: 1,
+          y: 0,
+          duration: 0.46,
+          stagger: 0.05
+        }, "hero-in+=0.32");
+
+      if (planePath) {
+        timeline.to(planePath, { strokeDashoffset: 0, duration: 0.8, ease: "power2.out" }, "hero-in+=0.24");
+      }
+
+      if (planeText) {
+        timeline.to(planeText, { opacity: 1, x: 0, duration: 0.36 }, "hero-in+=0.56");
+      }
     }, heroRef);
 
     return () => context.revert();

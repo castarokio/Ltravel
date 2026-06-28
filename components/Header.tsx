@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { navItems } from "@/lib/site-data";
@@ -14,16 +14,38 @@ export function Header() {
   const headerRef = useRef<HTMLElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!headerRef.current || shouldReduceMotion()) return;
 
     const context = gsap.context(() => {
-      gsap.from(".brand-link, .desktop-nav .nav-item, .desktop-actions > *", {
-        opacity: 0,
-        y: -6,
-        duration: 0.16,
-        ease: "power2.out"
-      });
+      gsap.set(".brand-link, .desktop-actions > *, .desktop-nav .nav-item", { opacity: 0 });
+      gsap.set(".brand-link", { y: -10 });
+      gsap.set(".desktop-actions > *", { y: -8 });
+      gsap.set(".nav-stair", { y: (index: number) => 18 - index * 6, x: (index: number) => -10 + index * 5 });
+      gsap.set(".desktop-nav .nav-item:not(.nav-stair)", { y: -8 });
+
+      gsap
+        .timeline({ defaults: { ease: "power3.out" } })
+        .to(".brand-link", { opacity: 1, y: 0, duration: 0.36 }, 0)
+        .to(".nav-stair", {
+          opacity: 1,
+          x: 0,
+          y: 0,
+          duration: 0.48,
+          stagger: 0.07
+        }, 0.06)
+        .to(".desktop-nav .nav-item:not(.nav-stair)", {
+          opacity: 1,
+          y: 0,
+          duration: 0.34,
+          stagger: 0.035
+        }, 0.22)
+        .to(".desktop-actions > *", {
+          opacity: 1,
+          y: 0,
+          duration: 0.34,
+          stagger: 0.05
+        }, 0.28);
     }, headerRef);
 
     return () => context.revert();
@@ -83,8 +105,8 @@ export function Header() {
         </div>
 
         <nav className="desktop-nav" aria-label="Main navigation">
-          {navItems.map((item) => (
-            <div className="nav-item nav-item-hover" key={item.label}>
+          {navItems.map((item, index) => (
+            <div className={`nav-item nav-item-hover ${index < 3 ? "nav-stair" : ""}`} key={item.label}>
               <Link href={item.href}>
                 {item.label}
                 {item.children && <ChevronDown size={13} />}

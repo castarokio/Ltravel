@@ -19,34 +19,8 @@
 
 * {
   box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  margin: 0;
-  background:
-    linear-gradient(180deg, #fff 0%, #fff 42%, rgba(0, 82, 204, 0.035) 42%, #fff 58%),
-    #fff;
-  color: var(--text);
-  font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-button,
-input {
-  font: inherit;
-}
-/* stray brace removed */
-
-* {
-  box-sizing: border-box;
+  transition: none !important;
+  animation: none !important;
 }
 
 html {
@@ -295,8 +269,7 @@ img {
   box-shadow: 0 9px 16px rgba(0, 82, 204, 0.24);
   position: relative;
   overflow: hidden;
-  transition: transform 160ms ease, background 160ms ease, box-shadow 160ms ease;
-  will-change: transform;
+  transition: background 160ms ease, box-shadow 160ms ease;
 }
 
 .button::before {
@@ -310,7 +283,6 @@ img {
 
 .button:hover {
   background: var(--primary-dark);
-  transform: translateY(-3px) scale(1.015);
   box-shadow: 0 12px 20px rgba(0, 82, 204, 0.3);
 }
 
@@ -484,10 +456,9 @@ img {
   box-shadow: 0 30px 60px -28px rgba(15,23,42,0.4),
               0 12px 24px -16px rgba(37,99,235,0.25);
   border: 5px solid #ffffff;
-  transition: transform 160ms cubic-bezier(.2,.7,.2,1);
-  will-change: transform, opacity;
+  transition: box-shadow 160ms cubic-bezier(.2,.7,.2,1);
 }
-.col-img:hover { transform: translateY(-8px) scale(1.02) rotate(0deg) !important; }
+.col-img:hover { box-shadow: 0 38px 72px -32px rgba(15,23,42,0.45), 0 16px 32px -16px rgba(37,99,235,0.3); }
 .col-img img, .col-img span { width: 100%; height: 100%; object-fit: cover; display: block; }
 
 /* Asymmetric collage — one anchor + 3 satellites */
@@ -506,12 +477,11 @@ img {
               0 4px 10px -4px rgba(15,23,42,0.12);
   font-size: 0.88rem; font-weight: 600; color: #0b1220;
   white-space: nowrap;
-  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 180ms ease;
-  will-change: transform, opacity;
+  transition: box-shadow 180ms ease;
+  will-change: opacity;
 }
 
 .chip:hover {
-  transform: translateY(-4px);
   box-shadow: 0 22px 46px -20px rgba(15,23,42,0.42),
               0 7px 14px -6px rgba(15,23,42,0.18);
 }
@@ -610,6 +580,189 @@ img {
   100% {
     transform: translateX(0%);
   }
+}
+
+/* ============ University Proof Modal ============ */
+.univ-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 8, 8, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.univ-modal-card {
+  background: #fff;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 520px;
+  overflow: hidden;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(0, 82, 204, 0.08);
+  position: relative;
+}
+
+.univ-modal-bar {
+  height: 6px;
+  background: linear-gradient(90deg, var(--primary) 0%, var(--pink) 100%);
+}
+
+.univ-modal-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  border: none;
+  background: rgba(8, 8, 8, 0.04);
+  color: var(--text);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 180ms ease, transform 180ms ease, color 180ms ease;
+}
+
+.univ-modal-close-btn:hover {
+  background: rgba(0, 82, 204, 0.1);
+  color: var(--primary);
+  transform: rotate(90deg);
+}
+
+.univ-modal-close-btn:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.univ-modal-body {
+  padding: 40px 32px 32px;
+}
+
+.univ-modal-logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 28px;
+  height: 80px;
+  align-items: center;
+}
+
+.univ-modal-logo img {
+  object-fit: contain;
+  max-height: 100%;
+  width: auto;
+}
+
+.univ-modal-title {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.univ-modal-title h3 {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text);
+  margin: 0 0 8px;
+}
+
+.univ-modal-location {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 13.5px;
+  font-weight: 500;
+}
+
+.univ-modal-location svg {
+  color: var(--primary);
+}
+
+.univ-modal-description {
+  color: #333;
+  font-size: 14.5px;
+  line-height: 1.6;
+  margin: 0 0 24px;
+  text-align: center;
+}
+
+.univ-modal-admission {
+  background: rgba(0, 82, 204, 0.03);
+  border: 1px solid rgba(0, 82, 204, 0.08);
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+}
+
+.univ-modal-admission-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.univ-modal-admission-head svg {
+  color: var(--primary);
+}
+
+.univ-modal-admission-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--primary);
+  letter-spacing: 0.04em;
+}
+
+.univ-modal-admission-value {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.univ-modal-programs {
+  margin-bottom: 32px;
+}
+
+.univ-modal-programs-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 12px;
+  letter-spacing: 0.06em;
+  text-align: center;
+}
+
+.univ-modal-programs-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.univ-modal-chip {
+  font-size: 12px;
+  background: #f3f4f6;
+  color: var(--text);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.univ-modal-cta {
+  display: flex;
+  justify-content: center;
+}
+
+.univ-modal-cta .button {
+  width: 100%;
 }
 
 .section-space {
@@ -885,6 +1038,15 @@ img {
   object-fit: cover;
   opacity: 0;
   visibility: hidden;
+  transform: scale(1.04);
+  transition: opacity 480ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 640ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.initiatives-media img.active {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
 }
 
 .initiatives-media img.active {
@@ -975,7 +1137,6 @@ img {
 }
 
 .services-explore-btn-large:hover {
-  transform: translateY(-2px);
   background: var(--primary-dark);
   box-shadow: 0 14px 28px rgba(0, 82, 204, 0.28);
 }
@@ -1290,12 +1451,11 @@ img {
   background: #fff;
   color: #050505;
   cursor: pointer;
-  transition: background 160ms ease, color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+  transition: background 160ms ease, color 160ms ease, box-shadow 160ms ease;
 }
 
 .carousel-controls button:hover,
 .testimonial-arrow:hover {
-  transform: translateY(-2px) scale(1.05);
   box-shadow: 0 12px 22px rgba(0, 82, 204, 0.16);
 }
 
@@ -1367,7 +1527,6 @@ img {
 }
 
 .placeholder-card:hover {
-  transform: translateY(-5px);
   border-color: rgba(245, 164, 0, 0.55);
   box-shadow: 0 22px 38px rgba(0, 82, 204, 0.1);
 }
@@ -1698,12 +1857,11 @@ img {
   text-align: left;
   cursor: pointer;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
-  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
 }
 
 .testimonial-switcher button:hover,
 .testimonial-switcher button.active {
-  transform: translateY(-4px);
   border-color: rgba(0, 82, 204, 0.32);
   box-shadow: 0 16px 28px rgba(0, 82, 204, 0.1);
 }
@@ -2259,6 +2417,31 @@ img {
 .footer-brand-hover:hover,
 .footer-col-hover:hover {
   transform: translateY(-3px);
+}
+
+.footer-col-hover a {
+  position: relative;
+  transition: color 180ms ease, padding-left 180ms ease;
+}
+
+.footer-col-hover a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0;
+  height: 1.5px;
+  background: var(--primary);
+  transition: width 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.footer-col-hover a:hover {
+  color: var(--primary);
+  padding-left: 4px;
+}
+
+.footer-col-hover a:hover::after {
+  width: 100%;
 }
 
 

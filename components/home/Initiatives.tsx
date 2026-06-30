@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   ArrowRight,
   Building2,
@@ -14,32 +14,85 @@ import {
   Plus
 } from "lucide-react";
 import { serviceJourney } from "@/lib/site-data";
+import { gsap } from "@/components/home/animation";
 
 const journeyIcons = [GraduationCap, Building2, FileCheck2, Hotel, HandHeart];
 
 export function Services() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Accordion & Image Swap GSAP Animations
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    // 1. Accordion Panels slide
+    const wrappers = containerRef.current.querySelectorAll(".initiative-panel-wrapper");
+    wrappers.forEach((el, index) => {
+      const isOpen = index === activeIndex;
+      gsap.to(el, {
+        height: isOpen ? "auto" : 0,
+        opacity: isOpen ? 1 : 0,
+        duration: 0.36,
+        ease: "power3.out",
+        overwrite: "auto"
+      });
+    });
+
+    // 2. Images cross-fade & scale
+    const images = containerRef.current.querySelectorAll(".initiatives-media img");
+    images.forEach((img, index) => {
+      const isActive = index === activeIndex;
+      if (isActive) {
+        gsap.killTweensOf(img);
+        gsap.set(img, { display: "block", zIndex: 2 });
+        gsap.fromTo(img, 
+          { opacity: 0, scale: 1.05 },
+          { opacity: 1, scale: 1, duration: 0.48, ease: "power2.out" }
+        );
+      } else {
+        gsap.killTweensOf(img);
+        gsap.to(img, { 
+          opacity: 0, 
+          scale: 1.05, 
+          duration: 0.36, 
+          ease: "power2.inOut",
+          zIndex: 1,
+          onComplete: () => {
+            gsap.set(img, { display: "none" });
+          }
+        });
+      }
+    });
+  }, [activeIndex]);
 
   return (
     <section className="services-section initiatives-section section-space" id="services">
-      <div className="container initiatives-layout">
+      <div className="container initiatives-layout" ref={containerRef}>
         <div className="initiatives-left">
           <div className="initiatives-heading">
             <p className="section-label">Services</p>
             <h2>Nos initiatives pour votre réussite !</h2>
           </div>
 
-          <div className="initiatives-media">
+          <div className="initiatives-media" style={{ position: "relative", overflow: "hidden", minHeight: "420px" }}>
             {serviceJourney.map((item, index) => (
               <Image
-                className={index === activeIndex ? "active" : ""}
+                key={item.id}
                 src={item.image}
                 alt={item.title}
                 width={620}
                 height={520}
                 loading="eager"
                 priority={index === 0}
-                key={item.id}
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  display: index === 0 ? "block" : "none"
+                }}
               />
             ))}
           </div>
@@ -57,7 +110,6 @@ export function Services() {
                   type="button"
                   aria-expanded={isOpen}
                   aria-controls={`initiative-panel-${item.id}`}
-                  onPointerDown={() => setActiveIndex(index)}
                   onClick={() => setActiveIndex(index)}
                 >
                   <span className="initiative-title">
@@ -70,13 +122,12 @@ export function Services() {
                 <div
                   className="initiative-panel-wrapper"
                   style={{
-                    display: "grid",
-                    gridTemplateRows: isOpen ? "1fr" : "0fr",
-                    transition: "grid-template-rows 160ms cubic-bezier(0.2, 0.8, 0.2, 1)",
+                    height: index === 0 ? "auto" : 0,
+                    opacity: index === 0 ? 1 : 0,
                     overflow: "hidden"
                   }}
                 >
-                  <div className="initiative-panel" style={{ minHeight: 0 }}>
+                  <div className="initiative-panel" id={`initiative-panel-${item.id}`} style={{ minHeight: 0 }}>
                     <p>{item.description}</p>
                     <Link href={item.href}>{item.cta}</Link>
                   </div>

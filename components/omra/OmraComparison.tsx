@@ -1,16 +1,7 @@
 "use client";
 
 import { Check, Hotel } from "lucide-react";
-
-interface OmraPackage {
-  id: string;
-  name: string;
-  duration: string;
-  priceRange: string;
-  hotelMakkah: string;
-  hotelMadinah: string;
-  features: string[];
-}
+import type { OmraPackage } from "@/lib/data/travel-packages";
 
 interface OmraComparisonProps {
   packages: OmraPackage[];
@@ -21,11 +12,9 @@ export function OmraComparison({ packages, onSelectFormula }: OmraComparisonProp
   return (
     <section className="omra-comparison">
       <div className="container">
-        <div style={{ textAlign: "center", marginBottom: "48px" }}>
-          <span className="section-label" style={{ color: "#047857" }}>Formules 2026</span>
-          <h2 style={{ fontFamily: "var(--font-display)", fontSize: "32px", fontWeight: "800", margin: "0" }}>
-            Comparez nos offres de pèlerinage
-          </h2>
+        <div className="omra-comparison-head">
+          <span className="section-label">Formules 2026</span>
+          <h2>Comparez nos offres de pèlerinage</h2>
         </div>
 
         <div className="omra-grid">
@@ -49,7 +38,7 @@ export function OmraComparison({ packages, onSelectFormula }: OmraComparisonProp
                       <strong>Makkah :</strong> {pkg.hotelMakkah}
                     </div>
                   </div>
-                  <div className="omra-hotel-line" style={{ marginTop: "8px" }}>
+                  <div className="omra-hotel-line omra-hotel-line--gap">
                     <Hotel size={16} />
                     <div>
                       <strong>Madinah :</strong> {pkg.hotelMadinah}
@@ -60,16 +49,15 @@ export function OmraComparison({ packages, onSelectFormula }: OmraComparisonProp
                 <ul className="omra-features-list">
                   {pkg.features.map((feature, idx) => (
                     <li key={idx}>
-                      <Check size={14} style={{ marginTop: "3px" }} />
+                      <Check size={14} className="omra-features-check" />
                       <span>{feature}</span>
                     </li>
                   ))}
                 </ul>
 
                 <button
-                  className={`button omra-card-btn ${!isPrestige ? "button-ghost" : ""}`}
+                  className={`button omra-card-btn ${isPrestige ? "omra-card-btn--featured" : "button-ghost"}`}
                   onClick={() => onSelectFormula(pkg.id)}
-                  style={isPrestige ? { background: "#047857", boxShadow: "0 8px 20px rgba(4, 120, 87, 0.25)" } : {}}
                   type="button"
                 >
                   Sélectionner cette formule

@@ -4,30 +4,27 @@ import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { Mail, Phone } from "lucide-react";
 import { Logo } from "@/components/Logo";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { shouldReduceMotion } from "@/components/home/animation";
+import { gsap, shouldReduceMotion } from "@/components/home/animation";
 
 export function Footer() {
   const footerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     if (typeof window === "undefined" || !footerRef.current || shouldReduceMotion()) return;
-    
-    gsap.registerPlugin(ScrollTrigger);
 
     const context = gsap.context(() => {
       gsap.fromTo(
-        footerRef.current,
+        ".footer-grid > *",
         { opacity: 0, y: 24 },
         {
           opacity: 1,
           y: 0,
-          duration: 0.18,
-          ease: "power2.out",
+          duration: 0.5,
+          ease: "power3.out",
+          stagger: 0.08,
           scrollTrigger: {
             trigger: footerRef.current,
-            start: "top 98%",
+            start: "top 92%",
             toggleActions: "play none none none"
           }
         }

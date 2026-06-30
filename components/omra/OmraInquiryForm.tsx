@@ -2,11 +2,7 @@
 
 import { useState } from "react";
 import { Send, Check, ShieldCheck, BookOpen, Award } from "lucide-react";
-
-interface OmraPackage {
-  id: string;
-  name: string;
-}
+import type { OmraPackage } from "@/lib/data/travel-packages";
 
 interface OmraInquiryFormProps {
   packages: OmraPackage[];
@@ -40,20 +36,20 @@ export function OmraInquiryForm({ packages, selectedFormula, setSelectedFormula 
   const activeTitle = activeFormulaObj ? activeFormulaObj.name : "";
 
   return (
-    <section className="inquiry-section" id="omra-inquiry-section" style={{ borderTop: "none" }}>
+    <section className="inquiry-section inquiry-section--omra" id="omra-inquiry-section">
       <div className="container">
         <div className="inquiry-grid">
           {/* Left Col - Benefits */}
           <div className="inquiry-info">
-            <span className="section-label" style={{ color: "#047857" }}>Dossier & Devis</span>
+            <span className="section-label">Dossier & Devis</span>
             <h2>Réservez ma place</h2>
             <p>
               Afin de garantir votre vol direct et vos réservations d&apos;hôtel dans les meilleures conditions, nous vous conseillons d&apos;effectuer vos demandes d&apos;inscription le plus tôt possible.
             </p>
 
             <div className="inquiry-benefits">
-              <div className="inquiry-benefit-item">
-                <div className="inquiry-benefit-icon" style={{ background: "rgba(4, 120, 87, 0.08)", color: "#047857" }}>
+              <div className="inquiry-benefit-item inquiry-benefit-item--omra">
+                <div className="inquiry-benefit-icon">
                   <ShieldCheck size={18} />
                 </div>
                 <div className="inquiry-benefit-text">
@@ -62,8 +58,8 @@ export function OmraInquiryForm({ packages, selectedFormula, setSelectedFormula 
                 </div>
               </div>
 
-              <div className="inquiry-benefit-item">
-                <div className="inquiry-benefit-icon" style={{ background: "rgba(4, 120, 87, 0.08)", color: "#047857" }}>
+              <div className="inquiry-benefit-item inquiry-benefit-item--omra">
+                <div className="inquiry-benefit-icon">
                   <BookOpen size={18} />
                 </div>
                 <div className="inquiry-benefit-text">
@@ -72,8 +68,8 @@ export function OmraInquiryForm({ packages, selectedFormula, setSelectedFormula 
                 </div>
               </div>
 
-              <div className="inquiry-benefit-item">
-                <div className="inquiry-benefit-icon" style={{ background: "rgba(4, 120, 87, 0.08)", color: "#047857" }}>
+              <div className="inquiry-benefit-item inquiry-benefit-item--omra">
+                <div className="inquiry-benefit-icon">
                   <Award size={18} />
                 </div>
                 <div className="inquiry-benefit-text">
@@ -181,49 +177,28 @@ export function OmraInquiryForm({ packages, selectedFormula, setSelectedFormula 
                   />
                 </div>
 
-                <button
-                  className="button"
-                  type="submit"
-                  style={{
-                    width: "100%",
-                    marginTop: "8px",
-                    background: "#047857",
-                    boxShadow: "0 6px 15px rgba(4, 120, 87, 0.3)"
-                  }}
-                >
+                <button className="button inquiry-submit" type="submit">
                   <Send size={16} /> Envoyer ma demande d&apos;inscription
                 </button>
               </form>
             ) : (
-              <div className="form-success-box">
-                <div className="form-success-icon" style={{ background: "rgba(4, 120, 87, 0.1)", color: "#047857" }}>
+              <div className="form-success-box form-success-box--omra">
+                <div className="form-success-icon">
                   <Check size={28} />
                 </div>
                 <h3>Demande Enregistrée !</h3>
-                <p style={{ marginBottom: "20px" }}>
+                <p className="form-success-lead">
                   Chaleureux remerciements <strong>{formData.name}</strong>. Votre pré-inscription pour la <strong>{activeTitle}</strong> a bien été enregistrée pour <strong>{formData.departureMonth}</strong>.
                 </p>
-                <div
-                  style={{
-                    background: "#f8fafc",
-                    border: "1px dashed var(--border)",
-                    borderRadius: "12px",
-                    padding: "16px",
-                    width: "100%",
-                    fontSize: "12px",
-                    textAlign: "left",
-                    marginBottom: "24px",
-                    color: "var(--text)"
-                  }}
-                >
-                  <div style={{ marginBottom: "6px" }}>
+                <div className="form-success-summary">
+                  <div>
                     <strong>Formule :</strong> {activeTitle}
                   </div>
-                  <div style={{ marginBottom: "6px" }}>
+                  <div>
                     <strong>Participants :</strong>{" "}
                     {formData.pilgrims === "1" ? "1 Pèlerin" : formData.pilgrims === "2" ? "2 Pèlerins" : formData.pilgrims}
                   </div>
-                  <div style={{ marginBottom: "6px" }}>
+                  <div>
                     <strong>Départ souhaité :</strong> {formData.departureMonth}
                   </div>
                   <div>

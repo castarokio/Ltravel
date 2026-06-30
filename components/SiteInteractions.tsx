@@ -12,7 +12,9 @@ const buttonSelector = [
   ".dest-action-btn",
   ".dest-itinerary-day-btn",
   ".dest-accordion-header",
-  ".omra-card-btn"
+  ".omra-card-btn",
+  ".desktop-nav a",
+  ".login-link"
 ].join(",");
 
 const surfaceSelector = [
@@ -26,7 +28,6 @@ const surfaceSelector = [
   ".package-card",
   ".omra-package-card",
   ".dest-related-card",
-  ".proof-logo-card",
   ".testimonial-switcher button"
 ].join(",");
 
@@ -36,6 +37,7 @@ const revealSelector = [
   ".package-card",
   ".tour-card",
   ".omra-package-card",
+  ".omra-card",
   ".ziyarat-card",
   ".dest-hero-section .container > *",
   ".dest-content-section > *",

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { X, ExternalLink, Award, MapPin, GraduationCap } from "lucide-react";
 import { proofLogos } from "@/lib/site-data";
 import { gsap } from "@/components/home/animation";
@@ -86,12 +86,182 @@ const universityData: Record<string, Omit<UniversityDetails, "name" | "src">> = 
 
 export function Proof() {
   const [selectedUniv, setSelectedUniv] = useState<UniversityDetails | null>(null);
+  const tickerTrackRef = useRef<HTMLDivElement>(null);
+  const marqueeTimelineRef = useRef<gsap.core.Timeline | null>(null);
   const modalOverlayRef = useRef<HTMLDivElement>(null);
   const modalContentRef = useRef<HTMLDivElement>(null);
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
+  const lastTriggerRef = useRef<HTMLButtonElement | null>(null);
 
   const duplicatedLogos = [...proofLogos, ...proofLogos];
 
-  const handleOpenPopup = (logo: typeof proofLogos[0]) => {
+  // Infinite horizontal scroll marquee in GSAP
+  useEffect(() => {
+    if (!tickerTrackRef.current) return;
+
+    const track = tickerTrackRef.current;
+    
+    // Set initial position
+    gsap.set(track, { x: 0 });
+
+    const tl = gsap.timeline({ repeat: -1 });
+    tl.to(track, {
+      x: "-50%",
+      duration: 36,
+      ease: "none"
+    });
+
+    marqueeTimelineRef.current = tl;
+
+    return () => {
+      tl.kill();
+    };
+  }, []);
+
+  // GSAP Logo Hover Animations
+  const handleLogoMouseEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const img = e.currentTarget.querySelector("img");
+    if (img) {
+      gsap.to(img, { scale: 1.05, duration: 0.28, ease: "power2.out", overwrite: "auto" });
+    }
+  };
+
+  const handleLogoMouseLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const img = e.currentTarget.querySelector("img");
+    if (img) {
+      gsap.to(img, { scale: 1, duration: 0.24, ease: "power2.out", overwrite: "auto" });
+    }
+  };
+
+  const handleClosePopup = useCallback(() => {
+    if (!modalOverlayRef.current || !modalContentRef.current) {
+      setSelectedUniv(null);
+      return;
+    }
+
+    const overlay = modalOverlayRef.current;
+    const content = modalContentRef.current;
+
+    gsap.timeline({
+      onComplete: () => {
+        setSelectedUniv(null);
+        lastTriggerRef.current?.focus();
+      }
+    })
+    .to(content, {
+      scale: 0.95,
+      y: 15,
+      opacity: 0,
+      duration: 0.2,
+      ease: "power2.in"
+    })
+    .to(overlay, {
+      opacity: 0,
+      duration: 0.16
+    }, "-=0.12");
+  }, []);
+
+  // Modal Open Animation in GSAP
+  useEffect(() => {
+    if (!selectedUniv || !modalOverlayRef.current || !modalContentRef.current) return;
+
+    const overlay = modalOverlayRef.current;
+    const content = modalContentRef.current;
+
+    gsap.set(overlay, { opacity: 0 });
+    gsap.set(content, { scale: 0.94, y: 20, opacity: 0 });
+
+    gsap.timeline()
+      .to(overlay, {
+        opacity: 1,
+        duration: 0.22,
+        ease: "power2.out"
+      })
+      .to(content, {
+        scale: 1,
+        y: 0,
+        opacity: 1,
+        duration: 0.32,
+        ease: "back.out(1.5)"
+      }, "-=0.1");
+
+    const timer = setTimeout(() => closeBtnRef.current?.focus(), 320);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [selectedUniv]);
+
+  // Modal close button hover animation in GSAP
+  const handleCloseBtnMouseEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
+    gsap.to(e.currentTarget, { 
+      rotate: 90, 
+      scale: 1.06, 
+      backgroundColor: "rgba(0, 82, 204, 0.1)", 
+      color: "var(--primary)", 
+      duration: 0.25, 
+      ease: "power2.out" 
+    });
+  };
+
+  const handleCloseBtnMouseLeave = (e: React.MouseEvent<HTMLButtonElement>) => {
+    gsap.to(e.currentTarget, { 
+      rotate: 0, 
+      scale: 1, 
+      backgroundColor: "rgba(8, 8, 8, 0.04)", 
+      color: "var(--text)", 
+      duration: 0.2, 
+      ease: "power2.out" 
+    });
+  };
+
+  // Escape key handler
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") handleClosePopup();
+    };
+    if (selectedUniv) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedUniv, handleClosePopup]);
+
+  // Focus trap
+  useEffect(() => {
+    if (!selectedUniv || !modalOverlayRef.current) return;
+
+    const modal = modalOverlayRef.current;
+
+    const handleTab = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+
+      const focusable = modal.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+
+    modal.addEventListener("keydown", handleTab);
+    return () => modal.removeEventListener("keydown", handleTab);
+  }, [selectedUniv]);
+
+  const handleOpenPopup = (logo: typeof proofLogos[0], trigger?: HTMLButtonElement) => {
+    lastTriggerRef.current = trigger ?? null;
     const details = universityData[logo.name] || {
       location: "International",
       description: "Institution académique de prestige mondial, partenaire de nos étudiants.",
@@ -105,61 +275,6 @@ export function Proof() {
     });
   };
 
-  const handleClosePopup = () => {
-    if (!modalOverlayRef.current || !modalContentRef.current) {
-      setSelectedUniv(null);
-      return;
-    }
-
-    gsap.timeline({
-      onComplete: () => setSelectedUniv(null)
-    })
-    .to(modalContentRef.current, {
-      scale: 0.95,
-      y: 15,
-      opacity: 0,
-      duration: 0.22,
-      ease: "power2.in"
-    })
-    .to(modalOverlayRef.current, {
-      opacity: 0,
-      duration: 0.18
-    }, "-=0.15");
-  };
-
-  useEffect(() => {
-    if (selectedUniv && modalOverlayRef.current && modalContentRef.current) {
-      // Reset before animation
-      gsap.set(modalOverlayRef.current, { opacity: 0 });
-      gsap.set(modalContentRef.current, { scale: 0.94, y: 20, opacity: 0 });
-
-      gsap.timeline()
-        .to(modalOverlayRef.current, {
-          opacity: 1,
-          duration: 0.24,
-          ease: "power2.out"
-        })
-        .to(modalContentRef.current, {
-          scale: 1,
-          y: 0,
-          opacity: 1,
-          duration: 0.36,
-          ease: "back.out(1.6)"
-        }, "-=0.12");
-    }
-  }, [selectedUniv]);
-
-  // Handle escape key
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") handleClosePopup();
-    };
-    if (selectedUniv) {
-      window.addEventListener("keydown", handleKeyDown);
-    }
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedUniv]);
-
   return (
     <section className="proof-section">
       <div className="container">
@@ -167,13 +282,23 @@ export function Proof() {
           Nos étudiants sont admis dans les meilleures universités du monde
         </p>
       </div>
-      <div className="proof-ticker-container">
-        <div className="proof-ticker-track">
+      <div 
+        className="proof-ticker-container"
+        onMouseEnter={() => marqueeTimelineRef.current?.pause()}
+        onMouseLeave={() => marqueeTimelineRef.current?.play()}
+      >
+        <div 
+          className="proof-ticker-track" 
+          ref={tickerTrackRef}
+          aria-label="Universités partenaires de nos étudiants"
+        >
           {duplicatedLogos.map((logo, index) => (
             <button
               className="proof-logo-card"
               key={`${logo.name}-${index}`}
-              onClick={() => handleOpenPopup(logo)}
+              onClick={(e) => handleOpenPopup(logo, e.currentTarget)}
+              onMouseEnter={handleLogoMouseEnter}
+              onMouseLeave={handleLogoMouseLeave}
               type="button"
               aria-label={`Détails sur ${logo.name}`}
             >
@@ -185,129 +310,73 @@ export function Proof() {
 
       {/* University Popup Modal */}
       {selectedUniv && (
-        <div 
-          className="univ-modal-overlay" 
-          ref={modalOverlayRef} 
+        <div
+          className="univ-modal-overlay"
+          ref={modalOverlayRef}
           onClick={handleClosePopup}
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            backgroundColor: "rgba(8, 8, 8, 0.45)",
-            backdropFilter: "blur(12px)",
-            WebkitBackdropFilter: "blur(12px)",
-            zIndex: 9999,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "20px"
-          }}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Détails sur ${selectedUniv.name}`}
         >
-          <div 
-            className="univ-modal-card" 
-            ref={modalContentRef} 
+          <div
+            className="univ-modal-card"
+            ref={modalContentRef}
             onClick={(e) => e.stopPropagation()}
-            style={{
-              backgroundColor: "#fff",
-              borderRadius: "20px",
-              width: "100%",
-              maxWidth: "520px",
-              overflow: "hidden",
-              boxShadow: "0 25px 60px -15px rgba(0, 0, 0, 0.3)",
-              border: "1px solid rgba(0, 82, 204, 0.08)",
-              position: "relative"
-            }}
           >
             {/* Header / Brand Color Bar */}
-            <div style={{ height: "6px", background: "linear-gradient(90deg, var(--primary) 0%, var(--pink) 100%)" }} />
+            <div className="univ-modal-bar" />
 
             {/* Close Button */}
-            <button 
+            <button
               onClick={handleClosePopup}
-              style={{
-                position: "absolute",
-                top: "16px",
-                right: "16px",
-                border: "none",
-                background: "rgba(8, 8, 8, 0.04)",
-                color: "var(--text)",
-                width: "36px",
-                height: "36px",
-                borderRadius: "50%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                cursor: "pointer",
-                transition: "background 0.2s, transform 0.2s"
-              }}
+              onMouseEnter={handleCloseBtnMouseEnter}
+              onMouseLeave={handleCloseBtnMouseLeave}
               className="univ-modal-close-btn"
               aria-label="Fermer"
+              ref={closeBtnRef}
             >
               <X size={18} />
             </button>
 
             {/* Modal Body */}
-            <div style={{ padding: "40px 32px 32px" }}>
+            <div className="univ-modal-body">
               {/* Logo Area */}
-              <div style={{ display: "flex", justifyContent: "center", marginBottom: "28px", height: "80px", alignItems: "center" }}>
-                <Image 
-                  src={selectedUniv.src} 
-                  alt={selectedUniv.name} 
-                  width={180} 
-                  height={80} 
-                  style={{ objectFit: "contain", maxHeight: "100%", width: "auto" }} 
+              <div className="univ-modal-logo">
+                <Image
+                  src={selectedUniv.src}
+                  alt={selectedUniv.name}
+                  width={180}
+                  height={80}
                 />
               </div>
 
               {/* Title & Location */}
-              <div style={{ textAlign: "center", marginBottom: "24px" }}>
-                <h3 style={{ fontSize: "22px", fontWeight: "800", color: "var(--text)", margin: "0 0 8px" }}>
-                  {selectedUniv.name}
-                </h3>
-                <div style={{ display: "inline-flex", alignItems: "center", gap: "6px", color: "var(--muted)", fontSize: "13.5px", fontWeight: "500" }}>
-                  <MapPin size={14} style={{ color: "var(--primary)" }} />
+              <div className="univ-modal-title">
+                <h3>{selectedUniv.name}</h3>
+                <div className="univ-modal-location">
+                  <MapPin size={14} />
                   <span>{selectedUniv.location}</span>
                 </div>
               </div>
 
               {/* Description */}
-              <p style={{ color: "#333", fontSize: "14.5px", lineHeight: "1.6", margin: "0 0 24px", textAlign: "center" }}>
-                {selectedUniv.description}
-              </p>
+              <p className="univ-modal-description">{selectedUniv.description}</p>
 
               {/* Admission Info Panel */}
-              <div style={{ background: "rgba(0, 82, 204, 0.03)", border: "1px solid rgba(0, 82, 204, 0.08)", borderRadius: "14px", padding: "16px 20px", marginBottom: "24px" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "8px" }}>
-                  <Award size={18} style={{ color: "var(--primary)" }} />
-                  <span style={{ fontSize: "12px", fontWeight: "700", textTransform: "uppercase", color: "var(--primary)", letterSpacing: "0.04em" }}>
-                    Performance Admissions
-                  </span>
+              <div className="univ-modal-admission">
+                <div className="univ-modal-admission-head">
+                  <Award size={18} />
+                  <span className="univ-modal-admission-label">Performance Admissions</span>
                 </div>
-                <p style={{ margin: 0, fontSize: "14px", fontWeight: "600", color: "var(--text)" }}>
-                  {selectedUniv.successRate}
-                </p>
+                <p className="univ-modal-admission-value">{selectedUniv.successRate}</p>
               </div>
 
               {/* Key Programs */}
-              <div style={{ marginBottom: "32px" }}>
-                <span style={{ fontSize: "11px", fontWeight: "700", textTransform: "uppercase", color: "var(--muted)", display: "block", marginBottom: "12px", letterSpacing: "0.06em", textAlign: "center" }}>
-                  Filières les plus demandées
-                </span>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", justifyContent: "center" }}>
-                  {selectedUniv.keyPrograms.map((prog, idx) => (
-                    <span 
-                      key={idx} 
-                      style={{ 
-                        fontSize: "12px", 
-                        background: "#f3f4f6", 
-                        color: "var(--text)", 
-                        padding: "6px 12px", 
-                        borderRadius: "20px", 
-                        fontWeight: "500" 
-                      }}
-                    >
+              <div className="univ-modal-programs">
+                <span className="univ-modal-programs-label">Filières les plus demandées</span>
+                <div className="univ-modal-programs-list">
+                  {selectedUniv.keyPrograms.map((prog) => (
+                    <span className="univ-modal-chip" key={prog}>
                       {prog}
                     </span>
                   ))}
@@ -315,18 +384,8 @@ export function Proof() {
               </div>
 
               {/* CTA Action */}
-              <div style={{ display: "flex", justifyContent: "center" }}>
-                <button 
-                  onClick={handleClosePopup}
-                  className="button"
-                  style={{ 
-                    width: "100%", 
-                    display: "inline-flex", 
-                    alignItems: "center", 
-                    justifyContent: "center", 
-                    gap: "8px" 
-                  }}
-                >
+              <div className="univ-modal-cta">
+                <button onClick={handleClosePopup} className="button">
                   <GraduationCap size={18} />
                   <span>Postuler dans cette université</span>
                 </button>

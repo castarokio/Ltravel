@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { MotionPageShell } from "@/components/MotionPageShell";
+
+export const metadata: Metadata = {
+  title: "Études à l'Étranger | Land Travel",
+  description: "Parcours complet pour étudier à l'étranger : profil, destinations, programmes, admission et visa, accompagné par les conseillers Land Travel."
+};
 
 export default function StudyAbroadPage() {
   return (

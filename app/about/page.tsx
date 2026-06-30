@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { MotionPageShell } from "@/components/MotionPageShell";
+
+export const metadata: Metadata = {
+  title: "À Propos | Land Travel",
+  description: "Découvrez ExploreEdu / Land Travel : notre mission d'accompagner les étudiants et familles dans le choix de destinations, l'admission et les démarches de visa."
+};
 
 export default function AboutPage() {
   return (

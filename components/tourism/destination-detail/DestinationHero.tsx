@@ -19,11 +19,15 @@ export function DestinationHero({ dest }: DestinationHeroProps) {
   const [isSaved, setIsSaved] = useState(false);
   const [shareSuccess, setShareSuccess] = useState(false);
 
-  const handleShare = () => {
+  const handleShare = async () => {
     if (typeof window !== "undefined") {
-      navigator.clipboard.writeText(window.location.href);
-      setShareSuccess(true);
-      setTimeout(() => setShareSuccess(false), 2000);
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        setShareSuccess(true);
+        setTimeout(() => setShareSuccess(false), 2000);
+      } catch {
+        // Clipboard API unavailable or denied — silent fallback
+      }
     }
   };
 
@@ -31,19 +35,8 @@ export function DestinationHero({ dest }: DestinationHeroProps) {
     <section className="dest-hero-section">
       <div className="container">
         {/* Header Back Navigation */}
-        <div style={{ marginBottom: "24px", paddingTop: "32px" }}>
-          <Link
-            href="/"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "8px",
-              color: "var(--muted)",
-              fontSize: "13px",
-              fontWeight: "500",
-              textDecoration: "none"
-            }}
-          >
+        <div className="dest-back-wrap">
+          <Link href="/" className="dest-back-link">
             <ArrowLeft size={14} /> Retour à l&apos;accueil
           </Link>
         </div>

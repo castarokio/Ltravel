@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { MotionPageShell } from "@/components/MotionPageShell";
+
+export const metadata: Metadata = {
+  title: "Contact | Land Travel",
+  description: "Contactez Land Travel pour une consultation en éducation, tourisme ou Omra : formulaire, prise de rendez-vous, téléphone et e-mail."
+};
 
 export default function ContactPage() {
   return (

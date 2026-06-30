@@ -102,13 +102,12 @@
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(8, 8, 8, 0.02);
-  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 180ms ease, border-color 180ms ease;
+  transition: box-shadow 180ms ease, border-color 180ms ease;
   display: flex;
   flex-direction: column;
 }
 
 .package-card:hover {
-  transform: translateY(-6px);
   border-color: rgba(0, 82, 204, 0.16);
   box-shadow: 0 22px 45px rgba(0, 82, 204, 0.08);
 }
@@ -124,11 +123,6 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 140ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.package-card:hover .package-image-wrap img {
-  transform: scale(1.08);
 }
 
 .package-badge-overlay {
@@ -302,6 +296,19 @@
   display: flex;
   gap: 14px;
   align-items: flex-start;
+  padding: 6px;
+  margin: 0 -6px;
+  border-radius: 12px;
+  transition: background 220ms ease;
+}
+
+.inquiry-benefit-item:hover {
+  background: rgba(4, 120, 87, 0.04);
+}
+
+.inquiry-benefit-item--omra .inquiry-benefit-icon {
+  background: rgba(4, 120, 87, 0.08);
+  color: #047857;
 }
 
 .inquiry-benefit-icon {
@@ -420,6 +427,56 @@
   100% { transform: scale(1); opacity: 1; }
 }
 
+/* Omra-tinted accent overrides for the inquiry section */
+.inquiry-section--omra {
+  border-top: none;
+}
+
+.inquiry-section--omra .section-label {
+  color: #047857;
+}
+
+.inquiry-submit {
+  width: 100%;
+  margin-top: 8px;
+  background: #047857;
+  box-shadow: 0 6px 15px rgba(4, 120, 87, 0.3);
+}
+
+.inquiry-submit:hover {
+  background: #036346;
+  box-shadow: 0 10px 22px rgba(4, 120, 87, 0.36);
+}
+
+.form-success-box--omra .form-success-icon {
+  background: rgba(4, 120, 87, 0.1);
+  color: #047857;
+}
+
+.form-success-summary {
+  background: #f8fafc;
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  width: 100%;
+  font-size: 12px;
+  text-align: left;
+  margin-bottom: 24px;
+  color: var(--text);
+}
+
+.form-success-summary > div {
+  margin-bottom: 6px;
+}
+
+.form-success-summary > div:last-child {
+  margin-bottom: 0;
+}
+
+.form-success-lead {
+  margin-bottom: 20px;
+}
+
 /* Omra Specific Styles */
 .omra-emerald {
   --primary: #047857;
@@ -455,7 +512,7 @@
   border-radius: 24px;
   padding: 38px 28px;
   box-shadow: 0 12px 32px rgba(8, 8, 8, 0.02);
-  transition: all 160ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition: box-shadow 160ms cubic-bezier(0.16, 1, 0.3, 1), border-color 160ms cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   flex-direction: column;
   position: relative;
@@ -468,12 +525,37 @@
 }
 
 .omra-card:hover {
-  transform: translateY(-8px);
   box-shadow: 0 24px 50px rgba(4, 120, 87, 0.08);
+  border-color: rgba(4, 120, 87, 0.3);
 }
 
 .omra-card.featured:hover {
-  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 28px 56px rgba(4, 120, 87, 0.14);
+}
+
+.omra-comparison-head {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.omra-comparison-head .section-label {
+  color: #047857;
+}
+
+.omra-comparison-head h2 {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 800;
+  margin: 0;
+}
+
+.omra-card-btn--featured {
+  background: #047857;
+  box-shadow: 0 8px 20px rgba(4, 120, 87, 0.25);
+}
+
+.omra-card-btn--featured:hover {
+  background: #03634660;
 }
 
 .omra-popular-badge {
@@ -551,6 +633,14 @@
   align-items: flex-start;
   gap: 10px;
   color: #333;
+}
+
+.omra-hotel-line--gap {
+  margin-top: 8px;
+}
+
+.omra-features-check {
+  margin-top: 3px;
 }
 
 .omra-hotel-line strong {

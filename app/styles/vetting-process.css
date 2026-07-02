@@ -1,0 +1,212 @@
+.vetting-section {
+  position: relative;
+  overflow: hidden;
+  background: #ffffff;
+  padding: 120px 0;
+}
+
+.vetting-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  gap: 80px;
+  align-items: start;
+  position: relative;
+}
+
+/* Left Sticky Column */
+.vetting-left-info {
+  position: sticky;
+  top: 130px;
+  z-index: 2;
+}
+
+.vetting-header {
+  position: relative;
+}
+
+.vetting-title {
+  margin: 24px 0 0;
+}
+
+.vetting-title-line {
+  display: block;
+  overflow: hidden;
+  line-height: 1.15;
+}
+
+.vetting-title-line span {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(32px, 4.2vw, 52px);
+  font-weight: 900;
+  color: var(--text);
+  transform: translateY(105%);
+}
+
+.vetting-desc {
+  font-size: clamp(16px, 1.15vw, 18px);
+  color: var(--muted);
+  margin-top: 24px;
+  line-height: 1.65;
+  max-width: 460px;
+  opacity: 0;
+  transform: translateY(15px);
+}
+
+.vetting-decor-blob {
+  position: absolute;
+  width: 140px;
+  height: 80px;
+  background: var(--orange);
+  border-radius: 50% 100px 80px 40px;
+  filter: blur(2px);
+  opacity: 0.85;
+  bottom: -90px;
+  left: -20px;
+  z-index: 1;
+  transform: rotate(-15deg);
+}
+
+/* Right Scrollable Column */
+.vetting-right-list {
+  padding-right: 48px;
+  position: relative;
+  z-index: 2;
+}
+
+.vetting-eyebrow-accent {
+  display: block;
+  font-family: monospace;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: 0.12em;
+  margin-bottom: 24px;
+  opacity: 0.85;
+}
+
+.vetting-cards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.vetting-card-wrapper {
+  position: relative;
+  z-index: 2;
+}
+
+/* Glassmorphic steps cards */
+.vetting-card {
+  background: #ffffff;
+  border: 1px solid rgba(230, 230, 230, 0.6);
+  border-radius: 20px;
+  padding: 24px 28px;
+  box-shadow: 0 4px 14px rgba(8, 8, 8, 0.02);
+  position: relative;
+  z-index: 2;
+  cursor: pointer;
+}
+
+/* Aura Glow behind card */
+.vetting-glow {
+  position: absolute;
+  inset: -6px;
+  background: linear-gradient(135deg, rgba(0, 82, 204, 0.14) 0%, rgba(183, 74, 168, 0.14) 100%);
+  filter: blur(30px);
+  border-radius: 24px;
+  opacity: 0;
+  transform: scale(0.92);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.vetting-card-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.vetting-card-number {
+  font-size: 22px;
+  font-weight: 800;
+  color: #dcdcdc;
+  font-family: var(--font-display);
+  transform-origin: center;
+}
+
+.vetting-card-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+}
+
+.vetting-card-desc {
+  font-size: 14.5px;
+  color: var(--muted);
+  line-height: 1.6;
+  padding-left: 42px;
+}
+
+.vetting-card-desc p {
+  margin: 0;
+}
+
+/* Scroll Progress indicator */
+.vetting-progress-container {
+  position: absolute;
+  top: 130px;
+  bottom: 130px;
+  right: 0;
+  width: 2px;
+  background: rgba(0, 82, 204, 0.08);
+  z-index: 5;
+}
+
+.vetting-progress-fill {
+  width: 100%;
+  height: 0%;
+  background: var(--primary);
+  transform-origin: top center;
+}
+
+.vetting-progress-dot {
+  position: absolute;
+  left: 50%;
+  top: 0%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--primary);
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 10px rgba(0, 82, 204, 0.45);
+}
+
+/* Responsiveness */
+@media (max-width: 968px) {
+  .vetting-layout {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  .vetting-left-info {
+    position: relative;
+    top: 0;
+  }
+
+  .vetting-right-list {
+    padding-right: 24px;
+  }
+
+  .vetting-progress-container {
+    right: 12px;
+  }
+
+  .vetting-decor-blob {
+    bottom: -60px;
+    left: auto;
+    right: 20px;
+  }
+}

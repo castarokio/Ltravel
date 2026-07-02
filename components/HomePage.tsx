@@ -11,6 +11,7 @@ import { Destinations } from "@/components/home/Destinations";
 import { WhyChoose } from "@/components/home/WhyChoose";
 import { TourismDestinations } from "@/components/home/TourismDestinations";
 import { Testimonials } from "@/components/home/Testimonials";
+import { VettingProcess } from "@/components/home/VettingProcess";
 
 type RevealOptions = {
   from?: gsap.TweenVars;
@@ -140,6 +141,7 @@ export function HomePage() {
       <OmraSection />
       <Destinations />
       <WhyChoose />
+      <VettingProcess />
       <Testimonials />
       <Newsletter />
     </div>

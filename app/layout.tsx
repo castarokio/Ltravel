@@ -7,6 +7,7 @@ import "./globals.css";
 import "./styles/travel-pages.css";
 import "./styles/tourism-destinations.css";
 import "./styles/destination-detail.css";
+import "./styles/vetting-process.css";
 
 export const metadata: Metadata = {
   title: "Land Travel | Études, tourisme et Omra",

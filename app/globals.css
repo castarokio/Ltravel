@@ -2444,4 +2444,24 @@ img {
   width: 100%;
 }
 
+/* GSAP Hardware Acceleration: promote animated elements to GPU compositor layers on load */
+.col-img,
+.chip,
+.dest-grid-card,
+.destination-card,
+.placeholder-card,
+.initiative-row,
+.package-card,
+.tour-card,
+.omra-package-card,
+.ziyarat-card,
+.dest-related-card,
+.utility-card,
+.service-card-v2,
+.proof-logo-card {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
 

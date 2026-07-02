@@ -116,7 +116,8 @@ export function SiteInteractions() {
               duration: 0.42,
               stagger: 0.035,
               ease: "power3.out",
-              overwrite: "auto"
+              overwrite: "auto",
+              lazy: false
             }
           );
         }

@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import { gsap, ScrollTrigger, shouldReduceMotion } from "@/components/home/animation";
+
+const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 const buttonSelector = [
   ".button",
@@ -76,13 +78,16 @@ function bindHover(
 }
 
 export function SiteInteractions() {
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (shouldReduceMotion()) return;
 
     const context = gsap.context(() => {
       const buttons = gsap.utils.toArray<Element>(buttonSelector);
       const surfaces = gsap.utils.toArray<Element>(surfaceSelector);
       const revealItems = gsap.utils.toArray<Element>(revealSelector);
+
+      // Pre-hide all reveal items synchronously before browser paint to prevent flash
+      gsap.set(revealItems, { autoAlpha: 0, y: 20, scale: 0.985 });
 
       gsap.set([...buttons, ...surfaces], {
         transformOrigin: "50% 50%",
@@ -106,9 +111,8 @@ export function SiteInteractions() {
         start: "top 94%",
         once: true,
         onEnter: (batch) => {
-          gsap.fromTo(
+          gsap.to(
             batch,
-            { autoAlpha: 0, y: 20, scale: 0.985 },
             {
               autoAlpha: 1,
               y: 0,

@@ -2464,4 +2464,18 @@ img {
   -webkit-backface-visibility: hidden;
 }
 
+/* Pre-hide reveal items to prevent Flash of Unstyled Content (FOUC) before GSAP starts */
+.utility-card,
+.service-hero-content > *,
+.package-card,
+.tour-card,
+.omra-package-card,
+.omra-card,
+.ziyarat-card,
+.dest-hero-section .container > *,
+.dest-content-section > *,
+.dest-related-card {
+  opacity: 0;
+}
+
 

@@ -5,27 +5,23 @@
   padding: 140px 0;
 }
 
-.vetting-layout {
-  display: grid;
-  grid-template-columns: 1fr 1.35fr;
-  gap: 100px;
-  align-items: start;
+/* Vertical Centered Container */
+.vetting-container-vertical {
+  position: relative;
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Stacked Header Block */
+.vetting-header-vertical {
+  margin-bottom: 72px;
+  text-align: left;
   position: relative;
 }
 
-/* Left Sticky Column */
-.vetting-left-info {
-  position: sticky;
-  top: 140px;
-  z-index: 2;
-}
-
-.vetting-header {
-  position: relative;
-}
-
-.vetting-title {
-  margin: 28px 0 0;
+.vetting-title-vertical {
+  margin: 24px 0 0;
 }
 
 .vetting-title-line {
@@ -35,7 +31,7 @@
   margin-bottom: 6px;
 }
 
-/* Split Word Styles */
+/* Word Split Styles */
 .vetting-word-wrap {
   display: inline-block;
   overflow: hidden;
@@ -47,7 +43,7 @@
 .vetting-word-inner {
   display: inline-block;
   font-family: var(--font-display);
-  font-size: clamp(36px, 4.5vw, 56px);
+  font-size: clamp(38px, 5.5vw, 68px);
   font-weight: 900;
   color: var(--text);
   transform: translateY(115%);
@@ -55,32 +51,32 @@
 }
 
 .vetting-desc {
-  font-size: clamp(16px, 1.2vw, 19px);
+  font-size: clamp(17px, 1.25vw, 20px);
   color: var(--muted);
-  margin-top: 28px;
-  line-height: 1.68;
-  max-width: 480px;
+  margin-top: 32px;
+  line-height: 1.7;
+  max-width: 740px;
   opacity: 0;
   transform: translateY(25px);
 }
 
 .vetting-decor-blob {
   position: absolute;
-  width: 160px;
-  height: 90px;
+  width: 180px;
+  height: 100px;
   background: var(--orange);
   border-radius: 50% 120px 100px 50px;
   filter: blur(4px);
   opacity: 0.9;
-  bottom: -110px;
-  left: -20px;
+  top: -60px;
+  right: -40px;
   z-index: 1;
   transform: rotate(-15deg);
 }
 
-/* Right Scrollable Column */
-.vetting-right-list {
-  padding-right: 56px;
+/* Steps Stacked Vertically */
+.vetting-steps-vertical-wrapper {
+  margin-top: 60px;
   position: relative;
   z-index: 2;
 }
@@ -96,23 +92,25 @@
   opacity: 0.85;
 }
 
-.vetting-cards-list {
+.vetting-cards-list-vertical {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 22px;
+  width: 100%;
 }
 
 .vetting-card-wrapper {
   position: relative;
   z-index: 2;
+  width: 100%;
 }
 
-/* Massive Premium 3D Vetting Card */
+/* Upgraded Large 3D Card */
 .vetting-card {
   background: #ffffff;
   border: 1px solid rgba(230, 230, 230, 0.6);
-  border-radius: 24px;
-  padding: 32px 36px;
+  border-radius: 26px;
+  padding: 36px 44px;
   box-shadow: 0 4px 14px rgba(8, 8, 8, 0.02);
   position: relative;
   z-index: 2;
@@ -120,20 +118,21 @@
   transform-style: preserve-3d;
   backface-visibility: hidden;
   will-change: transform, border-color, box-shadow;
+  width: 100%;
 }
 
-/* 3D Cursor Spotlight Glow backdrop */
+/* Spotlight Follow Cursor Aura */
 .vetting-glow {
   position: absolute;
-  width: 320px;
-  height: 320px;
+  width: 360px;
+  height: 360px;
   background: radial-gradient(
     circle, 
     rgba(0, 82, 204, 0.22) 0%, 
     rgba(183, 74, 168, 0.16) 40%, 
     rgba(255, 140, 0, 0) 70%
   );
-  filter: blur(36px);
+  filter: blur(40px);
   border-radius: 50%;
   top: 50%;
   left: 50%;
@@ -147,12 +146,12 @@
 .vetting-card-header {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 28px;
   transform-style: preserve-3d;
 }
 
 .vetting-card-number {
-  font-size: 28px;
+  font-size: 32px;
   font-weight: 900;
   color: #e2e2e2;
   font-family: var(--font-display);
@@ -163,7 +162,7 @@
 }
 
 .vetting-card-title {
-  font-size: 21px;
+  font-size: 22px;
   font-weight: 800;
   color: var(--text);
   margin: 0;
@@ -172,10 +171,10 @@
 }
 
 .vetting-card-desc {
-  font-size: 15.5px;
+  font-size: 16px;
   color: var(--muted);
-  line-height: 1.65;
-  padding-left: 52px;
+  line-height: 1.7;
+  padding-left: 60px;
   transform: translateZ(5px);
   will-change: height, opacity;
 }
@@ -184,12 +183,12 @@
   margin: 0;
 }
 
-/* Scroll Progress Line (Right border alignment) */
+/* Vertical Scroll Progress Bar (Right side boundary) */
 .vetting-progress-container {
   position: absolute;
   top: 140px;
   bottom: 140px;
-  right: 0;
+  right: -24px;
   width: 2px;
   background: rgba(0, 82, 204, 0.08);
   z-index: 5;
@@ -218,28 +217,48 @@
 }
 
 /* Responsiveness */
-@media (max-width: 968px) {
-  .vetting-layout {
-    grid-template-columns: 1fr;
-    gap: 56px;
+@media (max-width: 1024px) {
+  .vetting-progress-container {
+    right: 4px;
+  }
+}
+
+@media (max-width: 768px) {
+  .vetting-section {
+    padding: 96px 0;
   }
 
-  .vetting-left-info {
-    position: relative;
-    top: 0;
+  .vetting-container-vertical {
+    padding: 0 16px;
   }
 
-  .vetting-right-list {
-    padding-right: 28px;
+  .vetting-header-vertical {
+    margin-bottom: 48px;
+  }
+
+  .vetting-card {
+    padding: 28px 24px;
+    border-radius: 20px;
+  }
+
+  .vetting-card-header {
+    gap: 16px;
+  }
+
+  .vetting-card-number {
+    font-size: 26px;
+  }
+
+  .vetting-card-title {
+    font-size: 19px;
+  }
+
+  .vetting-card-desc {
+    padding-left: 42px;
+    font-size: 14.5px;
   }
 
   .vetting-progress-container {
-    right: 12px;
-  }
-
-  .vetting-decor-blob {
-    bottom: -70px;
-    left: auto;
-    right: 20px;
+    display: none; /* Hide progress bar on small devices */
   }
 }

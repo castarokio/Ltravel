@@ -70,7 +70,7 @@ export function VettingProcess() {
           stagger: 0.025,
           ease: "power4.out",
           scrollTrigger: {
-            trigger: ".vetting-title",
+            trigger: ".vetting-title-vertical",
             start: "top 85%",
             toggleActions: "play none none none"
           }
@@ -94,14 +94,14 @@ export function VettingProcess() {
         }
       );
 
-      // 3. Scroll Progress line fill and dot tracking
+      // 3. Scroll Progress line fill and dot tracking (Vertical scroll path)
       gsap.to(".vetting-progress-fill", {
         height: "100%",
         ease: "none",
         scrollTrigger: {
           trigger: ".vetting-section",
-          start: "top 25%",
-          end: "bottom 75%",
+          start: "top 20%",
+          end: "bottom 80%",
           scrub: true
         }
       });
@@ -111,21 +111,21 @@ export function VettingProcess() {
         ease: "none",
         scrollTrigger: {
           trigger: ".vetting-section",
-          start: "top 25%",
-          end: "bottom 75%",
+          start: "top 20%",
+          end: "bottom 80%",
           scrub: true
         }
       });
 
-      // 4. Staggered 3D Perspective Card Entrance (steals human eyes!)
+      // 4. Staggered 3D Perspective Card Entrance
       gsap.fromTo(
         ".vetting-card",
         { 
           opacity: 0, 
-          y: 140, 
-          rotateX: -35, 
-          rotateY: 10,
-          scale: 0.82,
+          y: 120, 
+          rotateX: -25, 
+          rotateY: 5,
+          scale: 0.85,
           transformPerspective: 1200
         },
         {
@@ -134,18 +134,18 @@ export function VettingProcess() {
           rotateX: 0,
           rotateY: 0,
           scale: 1,
-          duration: 1.1,
-          stagger: 0.12,
-          ease: "back.out(1.25)",
+          duration: 1.0,
+          stagger: 0.1,
+          ease: "back.out(1.2)",
           scrollTrigger: {
-            trigger: ".vetting-cards-list",
+            trigger: ".vetting-cards-list-vertical",
             start: "top 82%",
             toggleActions: "play none none none"
           }
         }
       );
 
-      // 5. 3D Parallax Tilt effect & Cursor-tracking glow spot (highly premium!)
+      // 5. 3D Parallax Tilt effect & Cursor-tracking glow spot
       const cards = gsap.utils.toArray<HTMLElement>(".vetting-card-wrapper");
       cards.forEach((wrapper) => {
         const card = wrapper.querySelector(".vetting-card") as HTMLElement;
@@ -157,28 +157,24 @@ export function VettingProcess() {
 
         const onPointerMove = (e: PointerEvent) => {
           const rect = card.getBoundingClientRect();
-          const x = e.clientX - rect.left; // x position within element
-          const y = e.clientY - rect.top;  // y position within element
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
           
-          // Calculate center offsets (-0.5 to 0.5)
           const xc = x / rect.width - 0.5;
           const yc = y / rect.height - 0.5;
 
-          // Max 3D rotations in degrees
-          const rotateX = -yc * 18;
-          const rotateY = xc * 18;
+          const rotateX = -yc * 15;
+          const rotateY = xc * 15;
 
-          // Tilt the card container
           gsap.to(card, {
             rotateX: rotateX,
             rotateY: rotateY,
-            x: xc * 6,
-            y: yc * 6,
+            x: xc * 5,
+            y: yc * 5,
             duration: 0.2,
             ease: "power2.out"
           });
 
-          // Move the backdrop glow spotlight to center under mouse
           if (glow) {
             gsap.to(glow, {
               x: x - rect.width / 2,
@@ -192,12 +188,11 @@ export function VettingProcess() {
         const onPointerEnter = () => {
           card.addEventListener("pointermove", onPointerMove);
 
-          // Card hover lift & glowing scaling
           gsap.to(card, {
-            scale: 1.045,
-            z: 25,
-            borderColor: "rgba(0, 82, 204, 0.35)",
-            boxShadow: "0 28px 56px rgba(0, 82, 204, 0.08)",
+            scale: 1.035,
+            z: 20,
+            borderColor: "rgba(0, 82, 204, 0.3)",
+            boxShadow: "0 24px 52px rgba(0, 82, 204, 0.08)",
             duration: 0.3,
             ease: "power2.out"
           });
@@ -205,7 +200,7 @@ export function VettingProcess() {
           if (glow) {
             gsap.to(glow, {
               opacity: 1,
-              scale: 1.15,
+              scale: 1.12,
               duration: 0.3,
               ease: "power2.out"
             });
@@ -216,7 +211,7 @@ export function VettingProcess() {
               height: "auto",
               opacity: 0.8,
               marginTop: "16px",
-              duration: 0.35,
+              duration: 0.32,
               ease: "power2.out"
             });
           }
@@ -224,8 +219,8 @@ export function VettingProcess() {
           if (num) {
             gsap.to(num, {
               color: "var(--primary)",
-              scale: 1.08,
-              rotate: 5,
+              scale: 1.06,
+              rotate: 4,
               duration: 0.3,
               ease: "power2.out"
             });
@@ -235,7 +230,6 @@ export function VettingProcess() {
         const onPointerLeave = () => {
           card.removeEventListener("pointermove", onPointerMove);
 
-          // Reset all 3D rotations and positions
           gsap.to(card, {
             rotateX: 0,
             rotateY: 0,
@@ -291,38 +285,34 @@ export function VettingProcess() {
 
   return (
     <section className="vetting-section section-space" id="vetting" ref={sectionRef}>
-      <div className="container vetting-layout">
+      <div className="container vetting-container-vertical">
         
-        {/* Left Column (Sticky info) */}
-        <div className="vetting-left-info">
-          <div className="vetting-header">
-            <span className="section-label">Notre Processus</span>
-            
-            <h2 className="vetting-title">
-              <span className="vetting-title-line">
-                {renderSplitText("Comment nous réalisons")}
-              </span>
-              <span className="vetting-title-line">
-                {renderSplitText("vos projets de voyage")}
-              </span>
-              <span className="vetting-title-line">
-                {renderSplitText("(sans aucun stress)")}
-              </span>
-            </h2>
+        {/* Header Block (Title and Description stacked) */}
+        <div className="vetting-header-vertical">
+          <span className="section-label">Notre Processus</span>
+          
+          <h2 className="vetting-title-vertical">
+            <span className="vetting-title-line">
+              {renderSplitText("Comment nous réalisons")}
+            </span>
+            <span className="vetting-title-line">
+              {renderSplitText("vos projets de voyage")}
+            </span>
+            <span className="vetting-title-line">
+              {renderSplitText("(sans aucun stress)")}
+            </span>
+          </h2>
 
-            <p className="vetting-desc">
-              {"De la première consultation au suivi sur place, notre équipe d'experts prend tout en charge pour garantir votre succès académique, touristique ou spirituel."}
-            </p>
-          </div>
-
-          <div className="vetting-decor-blob"></div>
+          <p className="vetting-desc">
+            {"De la première consultation au suivi sur place, notre équipe d'experts prend tout en charge pour garantir votre succès académique, touristique ou spirituel."}
+          </p>
         </div>
 
-        {/* Right Column (Steps list) */}
-        <div className="vetting-right-list">
-          <div className="vetting-cards-list" style={{ perspective: "1500px", transformStyle: "preserve-3d" }}>
-            <span className="vetting-eyebrow-accent">VOTRE ACCOMPAGNEMENT EN 7 ÉTAPES</span>
-            
+        {/* Steps Block (Stacked vertically under the header) */}
+        <div className="vetting-steps-vertical-wrapper" style={{ perspective: "1500px", transformStyle: "preserve-3d" }}>
+          <span className="vetting-eyebrow-accent">VOTRE ACCOMPAGNEMENT EN 7 ÉTAPES</span>
+          
+          <div className="vetting-cards-list-vertical" style={{ transformStyle: "preserve-3d" }}>
             {steps.map((step) => (
               <div className="vetting-card-wrapper" key={step.num} style={{ transformStyle: "preserve-3d" }}>
                 {/* Glow layer behind card */}

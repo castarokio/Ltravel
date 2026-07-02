@@ -1,37 +1,64 @@
-.vetting-section {
+.vetting-section-horizontal {
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   background: #ffffff;
-  padding: 140px 0;
 }
 
-/* Vertical Centered Container */
-.vetting-container-vertical {
+.vetting-sticky-wrapper {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+/* Horizontal flex track */
+.vetting-track {
+  display: flex;
+  height: 100vh;
+  width: max-content;
+  align-items: center;
+  will-change: transform;
+}
+
+.vetting-slide {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+/* Title slide layout (Full Screen width) */
+.vetting-title-slide {
+  width: 100vw;
+  min-width: 100vw;
+  padding: 0 10vw;
   position: relative;
-  max-width: 920px;
-  margin: 0 auto;
-  padding: 0 24px;
 }
 
-/* Stacked Header Block */
-.vetting-header-vertical {
-  margin-bottom: 72px;
+.vetting-title-content {
+  max-width: 960px;
+  width: 100%;
   text-align: left;
+  z-index: 2;
   position: relative;
 }
 
-.vetting-title-vertical {
-  margin: 24px 0 0;
+.vetting-massive-title {
+  margin: 28px 0 0;
 }
 
 .vetting-title-line {
   display: block;
   overflow: hidden;
   line-height: 1.15;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
-/* Word Split Styles */
+/* Split Word Styles */
 .vetting-word-wrap {
   display: inline-block;
   overflow: hidden;
@@ -43,74 +70,72 @@
 .vetting-word-inner {
   display: inline-block;
   font-family: var(--font-display);
-  font-size: clamp(38px, 5.5vw, 68px);
+  font-size: clamp(40px, 6vw, 78px);
   font-weight: 900;
   color: var(--text);
   transform: translateY(115%);
   opacity: 0;
 }
 
-.vetting-desc {
-  font-size: clamp(17px, 1.25vw, 20px);
+.vetting-desc-horizontal {
+  font-size: clamp(18px, 1.35vw, 22px);
   color: var(--muted);
-  margin-top: 32px;
+  margin-top: 36px;
   line-height: 1.7;
-  max-width: 740px;
+  max-width: 680px;
   opacity: 0;
   transform: translateY(25px);
 }
 
-.vetting-decor-blob {
+/* Float orange blob in title background */
+.vetting-decor-blob-horizontal {
   position: absolute;
-  width: 180px;
-  height: 100px;
+  width: 220px;
+  height: 120px;
   background: var(--orange);
   border-radius: 50% 120px 100px 50px;
   filter: blur(4px);
-  opacity: 0.9;
-  top: -60px;
-  right: -40px;
+  opacity: 0.95;
+  bottom: 12vh;
+  right: 12vw;
   z-index: 1;
   transform: rotate(-15deg);
 }
 
-/* Steps Stacked Vertically */
-.vetting-steps-vertical-wrapper {
-  margin-top: 60px;
+/* Cards Wrapper (flex layout horizontally) */
+.vetting-cards-wrapper-horizontal {
+  display: flex;
+  gap: 48px;
+  padding-left: 8vw;
+  padding-right: 25vw;
+  align-items: center;
+  height: 100vh;
   position: relative;
-  z-index: 2;
 }
 
-.vetting-eyebrow-accent {
-  display: block;
+.vetting-eyebrow-accent-horizontal {
+  position: absolute;
+  top: 12vh;
+  left: 8vw;
   font-family: monospace;
   font-size: 13px;
   font-weight: 700;
   color: var(--primary);
   letter-spacing: 0.14em;
-  margin-bottom: 32px;
   opacity: 0.85;
 }
 
-.vetting-cards-list-vertical {
-  display: flex;
-  flex-direction: column;
-  gap: 22px;
-  width: 100%;
-}
-
-.vetting-card-wrapper {
+.vetting-card-wrapper-horizontal {
   position: relative;
   z-index: 2;
-  width: 100%;
 }
 
-/* Upgraded Large 3D Card */
-.vetting-card {
+/* Large 3D Card */
+.vetting-card-horizontal {
   background: #ffffff;
   border: 1px solid rgba(230, 230, 230, 0.6);
-  border-radius: 26px;
-  padding: 36px 44px;
+  border-radius: 28px;
+  padding: 44px 40px;
   box-shadow: 0 4px 14px rgba(8, 8, 8, 0.02);
   position: relative;
   z-index: 2;
@@ -118,11 +143,16 @@
   transform-style: preserve-3d;
   backface-visibility: hidden;
   will-change: transform, border-color, box-shadow;
-  width: 100%;
+  width: 380px;
+  min-width: 380px;
+  height: 480px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-/* Spotlight Follow Cursor Aura */
-.vetting-glow {
+/* Aura Glow Spotlight Follow Mouse */
+.vetting-glow-horizontal {
   position: absolute;
   width: 360px;
   height: 360px;
@@ -143,58 +173,69 @@
   will-change: transform, opacity;
 }
 
-.vetting-card-header {
+.vetting-card-header-horizontal {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 28px;
+  margin-bottom: 24px;
   transform-style: preserve-3d;
 }
 
-.vetting-card-number {
-  font-size: 32px;
-  font-weight: 900;
-  color: #e2e2e2;
-  font-family: var(--font-display);
-  transform-origin: center;
-  display: inline-block;
-  line-height: 1;
-  will-change: transform, color;
+.vetting-card-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: rgba(0, 82, 204, 0.05);
+  transform: translateZ(15px);
 }
 
-.vetting-card-title {
-  font-size: 22px;
-  font-weight: 800;
-  color: var(--text);
-  margin: 0;
-  letter-spacing: -0.01em;
+.vetting-card-number-horizontal {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #c8c8c8;
+  font-family: monospace;
+  letter-spacing: 0.05em;
   transform: translateZ(10px);
 }
 
-.vetting-card-desc {
-  font-size: 16px;
-  color: var(--muted);
-  line-height: 1.7;
-  padding-left: 60px;
-  transform: translateZ(5px);
-  will-change: height, opacity;
+.vetting-card-title-horizontal {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text);
+  margin: 0 auto 16px 0;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  transform: translateZ(12px);
 }
 
-.vetting-card-desc p {
+.vetting-card-desc-horizontal {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.65;
+  transform: translateZ(8px);
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.vetting-card-desc-horizontal p {
   margin: 0;
 }
 
-/* Vertical Scroll Progress Bar (Right side boundary) */
-.vetting-progress-container {
+/* Static vertical progress bar on the far right */
+.vetting-progress-container-horizontal {
   position: absolute;
-  top: 140px;
-  bottom: 140px;
-  right: -24px;
+  top: 130px;
+  bottom: 130px;
+  right: 48px;
   width: 2px;
   background: rgba(0, 82, 204, 0.08);
   z-index: 5;
 }
 
-.vetting-progress-fill {
+.vetting-progress-fill-horizontal {
   width: 100%;
   height: 0%;
   background: var(--primary);
@@ -202,63 +243,72 @@
   will-change: height;
 }
 
-.vetting-progress-dot {
+.vetting-progress-dot-horizontal {
   position: absolute;
   left: 50%;
   top: 0%;
   transform: translate(-50%, -50%);
-  width: 9px;
-  height: 9px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: var(--primary);
   border: 2px solid #ffffff;
-  box-shadow: 0 0 12px rgba(0, 82, 204, 0.55);
+  box-shadow: 0 0 10px rgba(0, 82, 204, 0.45);
   will-change: top;
 }
 
-/* Responsiveness */
-@media (max-width: 1024px) {
-  .vetting-progress-container {
-    right: 4px;
-  }
-}
-
-@media (max-width: 768px) {
-  .vetting-section {
-    padding: 96px 0;
+/* Fallbacks for responsiveness - switch to vertical on tablets/mobiles */
+@media (max-width: 968px) {
+  .vetting-sticky-wrapper {
+    position: relative;
+    height: auto;
+    overflow: visible;
   }
 
-  .vetting-container-vertical {
-    padding: 0 16px;
+  .vetting-track {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    width: 100%;
+    transform: none !important;
   }
 
-  .vetting-header-vertical {
-    margin-bottom: 48px;
+  .vetting-slide {
+    height: auto;
+    padding: 80px 24px;
+    width: 100% !important;
+    min-width: 100% !important;
   }
 
-  .vetting-card {
-    padding: 28px 24px;
-    border-radius: 20px;
+  .vetting-title-slide {
+    padding: 80px 24px;
   }
 
-  .vetting-card-header {
-    gap: 16px;
+  .vetting-cards-wrapper-horizontal {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    width: 100%;
+    padding: 0 24px 80px;
+    gap: 24px;
   }
 
-  .vetting-card-number {
-    font-size: 26px;
+  .vetting-eyebrow-accent-horizontal {
+    position: relative;
+    top: 0;
+    left: 0;
+    margin-bottom: 24px;
   }
 
-  .vetting-card-title {
-    font-size: 19px;
+  .vetting-card-horizontal {
+    width: 100%;
+    min-width: 100%;
+    height: auto;
+    padding: 32px 28px;
+    gap: 24px;
   }
 
-  .vetting-card-desc {
-    padding-left: 42px;
-    font-size: 14.5px;
-  }
-
-  .vetting-progress-container {
-    display: none; /* Hide progress bar on small devices */
+  .vetting-progress-container-horizontal {
+    display: none;
   }
 }

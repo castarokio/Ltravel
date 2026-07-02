@@ -2,47 +2,56 @@
 
 import { useEffect, useRef } from "react";
 import { gsap, ScrollTrigger, shouldReduceMotion } from "@/components/home/animation";
+import { Compass, Map, FileText, Send, FileCheck, Home, Plane } from "lucide-react";
 
 const steps = [
   {
     num: "1",
     title: "Consultation Initiale",
-    desc: "Nous analysons votre profil, vos ambitions académiques ou vos envies d'évasion pour dresser un bilan sur-mesure."
+    desc: "Nous analysons votre profil, vos ambitions académiques ou vos envies d'évasion pour dresser un bilan sur-mesure.",
+    Icon: Compass
   },
   {
     num: "2",
-    title: "Orientation & Choix Stratégique",
-    desc: "Sélection rigoureuse des universités partenaires, des programmes d'études ou des séjours touristiques adaptés."
+    title: "Orientation Stratégique",
+    desc: "Sélection rigoureuse des universités partenaires, des programmes d'études ou des séjours touristiques adaptés.",
+    Icon: Map
   },
   {
     num: "3",
     title: "Constitution du Dossier",
-    desc: "Aide à la rédaction des lettres de motivation, formulaires administratifs et rassemblement des pièces clés."
+    desc: "Aide à la rédaction des lettres de motivation, formulaires administratifs et rassemblement des pièces clés.",
+    Icon: FileText
   },
   {
     num: "4",
     title: "Soumission & Admission",
-    desc: "Dépôt officiel des candidatures auprès des établissements ou traitement des réservations hôtelières et vols."
+    desc: "Dépôt officiel des candidatures auprès des établissements ou traitement des réservations hôtelières et vols.",
+    Icon: Send
   },
   {
     num: "5",
-    title: "Préparation Consulaire (Visa)",
-    desc: "Simulations d'entretiens individuels et vérification minutieuse des justificatifs financiers requis pour l'ambassade."
+    title: "Préparation Consulaire",
+    desc: "Simulations d'entretiens individuels et vérification minutieuse des justificatifs financiers requis pour l'ambassade.",
+    Icon: FileCheck
   },
   {
     num: "6",
     title: "Logistique & Hébergement",
-    desc: "Recherche de logements étudiants sécurisés, assurances voyage et accueil personnalisé à l'arrivée."
+    desc: "Recherche de logements étudiants sécurisés, assurances voyage et accueil personnalisé à l'arrivée.",
+    Icon: Home
   },
   {
     num: "7",
     title: "Départ & Assistance 24/7",
-    desc: "Séance d'orientation prédépart et suivi continu une fois sur place pour garantir votre intégration et sérénité."
+    desc: "Séance d'orientation prédépart et suivi continu une fois sur place pour garantir votre intégration et sérénité.",
+    Icon: Plane
   }
 ];
 
 export function VettingProcess() {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
 
   // Helper to split text into words wrapped in spans for premium skew/slide animations
   const renderSplitText = (text: string) => {
@@ -54,10 +63,32 @@ export function VettingProcess() {
   };
 
   useEffect(() => {
-    if (!sectionRef.current || shouldReduceMotion()) return;
+    const track = trackRef.current;
+    if (!sectionRef.current || !track || shouldReduceMotion()) return;
 
     const context = gsap.context(() => {
-      // 1. Fancy Word-by-Word Title Reveal with Rotation & Skew
+      const scrollWidth = track.scrollWidth;
+      const windowWidth = window.innerWidth;
+      const xTranslation = -(scrollWidth - windowWidth);
+
+      // 1. Pinned Horizontal Scroll Timeline
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top top",
+          end: () => `+=${scrollWidth - windowWidth}`,
+          scrub: 1,
+          pin: true,
+          invalidateOnRefresh: true
+        }
+      });
+
+      tl.to(track, {
+        x: xTranslation,
+        ease: "none"
+      });
+
+      // 2. Word-by-Word Title Reveal with Rotation & Skew
       gsap.fromTo(
         ".vetting-word-inner",
         { y: "115%", rotate: 8, skewX: 12, opacity: 0 },
@@ -70,16 +101,16 @@ export function VettingProcess() {
           stagger: 0.025,
           ease: "power4.out",
           scrollTrigger: {
-            trigger: ".vetting-title-vertical",
-            start: "top 85%",
+            trigger: ".vetting-title-slide",
+            start: "top 80%",
             toggleActions: "play none none none"
           }
         }
       );
 
-      // 2. Title Description Reveal
+      // 3. Title Description Reveal
       gsap.fromTo(
-        ".vetting-desc",
+        ".vetting-desc-horizontal",
         { opacity: 0, y: 25 },
         {
           opacity: 0.8,
@@ -87,71 +118,44 @@ export function VettingProcess() {
           duration: 0.8,
           ease: "power3.out",
           scrollTrigger: {
-            trigger: ".vetting-desc",
-            start: "top 88%",
+            trigger: ".vetting-title-slide",
+            start: "top 75%",
             toggleActions: "play none none none"
           }
         }
       );
 
-      // 3. Scroll Progress line fill and dot tracking (Vertical scroll path)
-      gsap.to(".vetting-progress-fill", {
+      // 4. Scroll Progress bar filling connected to horizontal track scroll length
+      gsap.to(".vetting-progress-fill-horizontal", {
         height: "100%",
         ease: "none",
         scrollTrigger: {
-          trigger: ".vetting-section",
-          start: "top 20%",
-          end: "bottom 80%",
-          scrub: true
+          trigger: sectionRef.current,
+          start: "top top",
+          end: () => `+=${scrollWidth - windowWidth}`,
+          scrub: 1
         }
       });
 
-      gsap.to(".vetting-progress-dot", {
+      gsap.to(".vetting-progress-dot-horizontal", {
         top: "100%",
         ease: "none",
         scrollTrigger: {
-          trigger: ".vetting-section",
-          start: "top 20%",
-          end: "bottom 80%",
-          scrub: true
+          trigger: sectionRef.current,
+          start: "top top",
+          end: () => `+=${scrollWidth - windowWidth}`,
+          scrub: 1
         }
       });
 
-      // 4. Staggered 3D Perspective Card Entrance
-      gsap.fromTo(
-        ".vetting-card",
-        { 
-          opacity: 0, 
-          y: 120, 
-          rotateX: -25, 
-          rotateY: 5,
-          scale: 0.85,
-          transformPerspective: 1200
-        },
-        {
-          opacity: 1,
-          y: 0,
-          rotateX: 0,
-          rotateY: 0,
-          scale: 1,
-          duration: 1.0,
-          stagger: 0.1,
-          ease: "back.out(1.2)",
-          scrollTrigger: {
-            trigger: ".vetting-cards-list-vertical",
-            start: "top 82%",
-            toggleActions: "play none none none"
-          }
-        }
-      );
-
-      // 5. 3D Parallax Tilt effect & Cursor-tracking glow spot
-      const cards = gsap.utils.toArray<HTMLElement>(".vetting-card-wrapper");
+      // 5. 3D Parallax Tilt effect & Cursor-tracking glow spotlights
+      const cards = gsap.utils.toArray<HTMLElement>(".vetting-card-wrapper-horizontal");
       cards.forEach((wrapper) => {
-        const card = wrapper.querySelector(".vetting-card") as HTMLElement;
-        const glow = wrapper.querySelector(".vetting-glow") as HTMLElement;
-        const desc = wrapper.querySelector(".vetting-card-desc") as HTMLElement;
-        const num = wrapper.querySelector(".vetting-card-number") as HTMLElement;
+        const card = wrapper.querySelector(".vetting-card-horizontal") as HTMLElement;
+        const glow = wrapper.querySelector(".vetting-glow-horizontal") as HTMLElement;
+        const num = wrapper.querySelector(".vetting-card-number-horizontal") as HTMLElement;
+        const icon = wrapper.querySelector(".vetting-card-icon") as HTMLElement;
+        const desc = wrapper.querySelector(".vetting-card-desc-horizontal") as HTMLElement;
 
         if (!card) return;
 
@@ -163,8 +167,8 @@ export function VettingProcess() {
           const xc = x / rect.width - 0.5;
           const yc = y / rect.height - 0.5;
 
-          const rotateX = -yc * 15;
-          const rotateY = xc * 15;
+          const rotateX = -yc * 16;
+          const rotateY = xc * 16;
 
           gsap.to(card, {
             rotateX: rotateX,
@@ -189,10 +193,10 @@ export function VettingProcess() {
           card.addEventListener("pointermove", onPointerMove);
 
           gsap.to(card, {
-            scale: 1.035,
+            scale: 1.045,
             z: 20,
-            borderColor: "rgba(0, 82, 204, 0.3)",
-            boxShadow: "0 24px 52px rgba(0, 82, 204, 0.08)",
+            borderColor: "rgba(0, 82, 204, 0.35)",
+            boxShadow: "0 28px 56px rgba(0, 82, 204, 0.08)",
             duration: 0.3,
             ease: "power2.out"
           });
@@ -200,18 +204,8 @@ export function VettingProcess() {
           if (glow) {
             gsap.to(glow, {
               opacity: 1,
-              scale: 1.12,
+              scale: 1.15,
               duration: 0.3,
-              ease: "power2.out"
-            });
-          }
-
-          if (desc) {
-            gsap.to(desc, {
-              height: "auto",
-              opacity: 0.8,
-              marginTop: "16px",
-              duration: 0.32,
               ease: "power2.out"
             });
           }
@@ -219,10 +213,26 @@ export function VettingProcess() {
           if (num) {
             gsap.to(num, {
               color: "var(--primary)",
-              scale: 1.06,
-              rotate: 4,
+              scale: 1.08,
               duration: 0.3,
               ease: "power2.out"
+            });
+          }
+
+          if (icon) {
+            gsap.to(icon, {
+              scale: 1.1,
+              rotate: 8,
+              color: "var(--primary)",
+              duration: 0.3,
+              ease: "power2.out"
+            });
+          }
+
+          if (desc) {
+            gsap.to(desc, {
+              opacity: 0.9,
+              duration: 0.3
             });
           }
         };
@@ -254,23 +264,29 @@ export function VettingProcess() {
             });
           }
 
-          if (desc) {
-            gsap.to(desc, {
-              height: 0,
-              opacity: 0,
-              marginTop: "0px",
+          if (num) {
+            gsap.to(num, {
+              color: "#dcdcdc",
+              scale: 1,
               duration: 0.3,
               ease: "power3.out"
             });
           }
 
-          if (num) {
-            gsap.to(num, {
-              color: "#dcdcdc",
+          if (icon) {
+            gsap.to(icon, {
               scale: 1,
               rotate: 0,
+              color: "var(--muted)",
               duration: 0.3,
               ease: "power3.out"
+            });
+          }
+
+          if (desc) {
+            gsap.to(desc, {
+              opacity: 0.7,
+              duration: 0.3
             });
           }
         };
@@ -284,60 +300,73 @@ export function VettingProcess() {
   }, []);
 
   return (
-    <section className="vetting-section section-space" id="vetting" ref={sectionRef}>
-      <div className="container vetting-container-vertical">
+    <section className="vetting-section-horizontal" id="vetting" ref={sectionRef}>
+      <div className="vetting-sticky-wrapper">
         
-        {/* Header Block (Title and Description stacked) */}
-        <div className="vetting-header-vertical">
-          <span className="section-label">Notre Processus</span>
+        {/* Horizontal scrollable track */}
+        <div className="vetting-track" ref={trackRef}>
           
-          <h2 className="vetting-title-vertical">
-            <span className="vetting-title-line">
-              {renderSplitText("Comment nous réalisons")}
-            </span>
-            <span className="vetting-title-line">
-              {renderSplitText("vos projets de voyage")}
-            </span>
-            <span className="vetting-title-line">
-              {renderSplitText("(sans aucun stress)")}
-            </span>
-          </h2>
+          {/* Slide 1: Massive Title Block */}
+          <div className="vetting-slide vetting-title-slide">
+            <div className="vetting-title-content">
+              <span className="section-label">Notre Processus</span>
+              
+              <h2 className="vetting-massive-title">
+                <span className="vetting-title-line">
+                  {renderSplitText("Comment nous réalisons")}
+                </span>
+                <span className="vetting-title-line">
+                  {renderSplitText("vos projets de voyage")}
+                </span>
+                <span className="vetting-title-line">
+                  {renderSplitText("(sans aucun stress)")}
+                </span>
+              </h2>
 
-          <p className="vetting-desc">
-            {"De la première consultation au suivi sur place, notre équipe d'experts prend tout en charge pour garantir votre succès académique, touristique ou spirituel."}
-          </p>
-        </div>
+              <p className="vetting-desc-horizontal">
+                {"De la première consultation au suivi sur place, notre équipe d'experts prend tout en charge. Faites défiler pour découvrir notre accompagnement en 7 étapes."}
+              </p>
+            </div>
 
-        {/* Steps Block (Stacked vertically under the header) */}
-        <div className="vetting-steps-vertical-wrapper" style={{ perspective: "1500px", transformStyle: "preserve-3d" }}>
-          <span className="vetting-eyebrow-accent">VOTRE ACCOMPAGNEMENT EN 7 ÉTAPES</span>
-          
-          <div className="vetting-cards-list-vertical" style={{ transformStyle: "preserve-3d" }}>
-            {steps.map((step) => (
-              <div className="vetting-card-wrapper" key={step.num} style={{ transformStyle: "preserve-3d" }}>
-                {/* Glow layer behind card */}
-                <div className="vetting-glow"></div>
-                
-                <div className="vetting-card" style={{ transformStyle: "preserve-3d" }}>
-                  <div className="vetting-card-header">
-                    <span className="vetting-card-number">{step.num.padStart(2, "0")}</span>
-                    <h3 className="vetting-card-title">{step.title}</h3>
-                  </div>
+            <div className="vetting-decor-blob-horizontal"></div>
+          </div>
+
+          {/* Slide 2: The 7 steps cards inline */}
+          <div className="vetting-cards-wrapper-horizontal" style={{ perspective: "1500px", transformStyle: "preserve-3d" }}>
+            <span className="vetting-eyebrow-accent-horizontal">NOTRE ACCOMPAGNEMENT EN 7 ÉTAPES</span>
+            
+            {steps.map((step) => {
+              const IconComponent = step.Icon;
+              return (
+                <div className="vetting-card-wrapper-horizontal" key={step.num} style={{ transformStyle: "preserve-3d" }}>
+                  {/* Glow layer behind card */}
+                  <div className="vetting-glow-horizontal"></div>
                   
-                  {/* Expanded description wrapper */}
-                  <div className="vetting-card-desc" style={{ height: 0, opacity: 0, overflow: "hidden" }}>
-                    <p>{step.desc}</p>
+                  <div className="vetting-card-horizontal" style={{ transformStyle: "preserve-3d" }}>
+                    <div className="vetting-card-header-horizontal">
+                      <div className="vetting-card-icon-wrap" style={{ transformStyle: "preserve-3d" }}>
+                        <IconComponent className="vetting-card-icon" size={32} strokeWidth={1.7} style={{ color: "var(--muted)", transition: "color 0.28s ease" }} />
+                      </div>
+                      <span className="vetting-card-number-horizontal">{"STEP - " + step.num.padStart(2, "0")}</span>
+                    </div>
+                    
+                    <h3 className="vetting-card-title-horizontal">{step.title}</h3>
+                    
+                    <div className="vetting-card-desc-horizontal">
+                      <p>{step.desc}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
+
         </div>
 
-        {/* Vertical Scroll Progress Bar (Far Right) */}
-        <div className="vetting-progress-container" aria-hidden="true">
-          <div className="vetting-progress-fill"></div>
-          <div className="vetting-progress-dot"></div>
+        {/* Vertical Scroll Progress Bar (Far Right, static) */}
+        <div className="vetting-progress-container-horizontal" aria-hidden="true">
+          <div className="vetting-progress-fill-horizontal"></div>
+          <div className="vetting-progress-dot-horizontal"></div>
         </div>
 
       </div>

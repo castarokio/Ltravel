@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from "react";
 import { gsap, ScrollTrigger, shouldReduceMotion } from "@/components/home/animation";
-import { ArrowRight, Sparkles } from "lucide-react";
 
 const steps = [
   {
@@ -45,32 +44,48 @@ const steps = [
 export function VettingProcess() {
   const sectionRef = useRef<HTMLDivElement>(null);
 
+  // Helper to split text into words wrapped in spans for premium skew/slide animations
+  const renderSplitText = (text: string) => {
+    return text.split(" ").map((word, i) => (
+      <span key={i} className="vetting-word-wrap">
+        <span className="vetting-word-inner">{word}</span>
+      </span>
+    ));
+  };
+
   useEffect(() => {
     if (!sectionRef.current || shouldReduceMotion()) return;
 
     const context = gsap.context(() => {
-      // 1. Text Line Reveal (Fades and slides up inside hidden overflow)
-      gsap.to(".vetting-title-line span", {
-        y: 0,
-        duration: 0.8,
-        stagger: 0.12,
-        ease: "power4.out",
-        scrollTrigger: {
-          trigger: ".vetting-title",
-          start: "top 85%",
-          toggleActions: "play none none none"
+      // 1. Fancy Word-by-Word Title Reveal with Rotation & Skew
+      gsap.fromTo(
+        ".vetting-word-inner",
+        { y: "115%", rotate: 8, skewX: 12, opacity: 0 },
+        {
+          y: "0%",
+          rotate: 0,
+          skewX: 0,
+          opacity: 1,
+          duration: 1.15,
+          stagger: 0.025,
+          ease: "power4.out",
+          scrollTrigger: {
+            trigger: ".vetting-title",
+            start: "top 85%",
+            toggleActions: "play none none none"
+          }
         }
-      });
+      );
 
       // 2. Title Description Reveal
       gsap.fromTo(
         ".vetting-desc",
-        { opacity: 0, y: 15 },
+        { opacity: 0, y: 25 },
         {
           opacity: 0.8,
           y: 0,
-          duration: 0.6,
-          ease: "power2.out",
+          duration: 0.8,
+          ease: "power3.out",
           scrollTrigger: {
             trigger: ".vetting-desc",
             start: "top 88%",
@@ -102,17 +117,26 @@ export function VettingProcess() {
         }
       });
 
-      // 4. Staggered Entrance of Vetting Cards
+      // 4. Staggered 3D Perspective Card Entrance (steals human eyes!)
       gsap.fromTo(
         ".vetting-card",
-        { opacity: 0, y: 30, scale: 0.98 },
+        { 
+          opacity: 0, 
+          y: 140, 
+          rotateX: -35, 
+          rotateY: 10,
+          scale: 0.82,
+          transformPerspective: 1200
+        },
         {
           opacity: 1,
           y: 0,
+          rotateX: 0,
+          rotateY: 0,
           scale: 1,
-          duration: 0.48,
-          stagger: 0.08,
-          ease: "power3.out",
+          duration: 1.1,
+          stagger: 0.12,
+          ease: "back.out(1.25)",
           scrollTrigger: {
             trigger: ".vetting-cards-list",
             start: "top 82%",
@@ -121,91 +145,144 @@ export function VettingProcess() {
         }
       );
 
-      // 5. Card Hover expansion & aura glows
-      const cards = gsap.utils.toArray<HTMLElement>(".vetting-card");
-      cards.forEach((card) => {
-        const glow = card.querySelector(".vetting-glow");
-        const desc = card.querySelector(".vetting-card-desc");
-        const num = card.querySelector(".vetting-card-number");
+      // 5. 3D Parallax Tilt effect & Cursor-tracking glow spot (highly premium!)
+      const cards = gsap.utils.toArray<HTMLElement>(".vetting-card-wrapper");
+      cards.forEach((wrapper) => {
+        const card = wrapper.querySelector(".vetting-card") as HTMLElement;
+        const glow = wrapper.querySelector(".vetting-glow") as HTMLElement;
+        const desc = wrapper.querySelector(".vetting-card-desc") as HTMLElement;
+        const num = wrapper.querySelector(".vetting-card-number") as HTMLElement;
 
-        const onEnter = () => {
+        if (!card) return;
+
+        const onPointerMove = (e: PointerEvent) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left; // x position within element
+          const y = e.clientY - rect.top;  // y position within element
+          
+          // Calculate center offsets (-0.5 to 0.5)
+          const xc = x / rect.width - 0.5;
+          const yc = y / rect.height - 0.5;
+
+          // Max 3D rotations in degrees
+          const rotateX = -yc * 18;
+          const rotateY = xc * 18;
+
+          // Tilt the card container
           gsap.to(card, {
-            y: -5,
-            scale: 1.02,
-            borderColor: "rgba(0, 82, 204, 0.25)",
-            boxShadow: "0 22px 48px rgba(0, 82, 204, 0.06)",
-            duration: 0.3,
-            ease: "power2.out",
-            overwrite: "auto"
+            rotateX: rotateX,
+            rotateY: rotateY,
+            x: xc * 6,
+            y: yc * 6,
+            duration: 0.2,
+            ease: "power2.out"
           });
+
+          // Move the backdrop glow spotlight to center under mouse
           if (glow) {
             gsap.to(glow, {
-              opacity: 1,
-              scale: 1.05,
-              duration: 0.3,
-              ease: "power2.out",
-              overwrite: "auto"
-            });
-          }
-          if (desc) {
-            gsap.to(desc, {
-              height: "auto",
-              opacity: 0.75,
-              marginTop: "12px",
-              duration: 0.3,
-              ease: "power2.out",
-              overwrite: "auto"
-            });
-          }
-          if (num) {
-            gsap.to(num, {
-              color: "var(--primary)",
-              scale: 1.06,
-              duration: 0.28,
+              x: x - rect.width / 2,
+              y: y - rect.height / 2,
+              duration: 0.25,
               ease: "power2.out"
             });
           }
         };
 
-        const onLeave = () => {
+        const onPointerEnter = () => {
+          card.addEventListener("pointermove", onPointerMove);
+
+          // Card hover lift & glowing scaling
           gsap.to(card, {
+            scale: 1.045,
+            z: 25,
+            borderColor: "rgba(0, 82, 204, 0.35)",
+            boxShadow: "0 28px 56px rgba(0, 82, 204, 0.08)",
+            duration: 0.3,
+            ease: "power2.out"
+          });
+
+          if (glow) {
+            gsap.to(glow, {
+              opacity: 1,
+              scale: 1.15,
+              duration: 0.3,
+              ease: "power2.out"
+            });
+          }
+
+          if (desc) {
+            gsap.to(desc, {
+              height: "auto",
+              opacity: 0.8,
+              marginTop: "16px",
+              duration: 0.35,
+              ease: "power2.out"
+            });
+          }
+
+          if (num) {
+            gsap.to(num, {
+              color: "var(--primary)",
+              scale: 1.08,
+              rotate: 5,
+              duration: 0.3,
+              ease: "power2.out"
+            });
+          }
+        };
+
+        const onPointerLeave = () => {
+          card.removeEventListener("pointermove", onPointerMove);
+
+          // Reset all 3D rotations and positions
+          gsap.to(card, {
+            rotateX: 0,
+            rotateY: 0,
+            x: 0,
             y: 0,
+            z: 0,
             scale: 1,
             borderColor: "rgba(230, 230, 230, 0.6)",
             boxShadow: "0 4px 14px rgba(8, 8, 8, 0.02)",
-            duration: 0.26,
-            ease: "power2.out",
-            overwrite: "auto"
+            duration: 0.35,
+            ease: "power3.out"
           });
+
           if (glow) {
             gsap.to(glow, {
               opacity: 0,
               scale: 0.9,
-              duration: 0.26,
-              overwrite: "auto"
+              x: 0,
+              y: 0,
+              duration: 0.35,
+              ease: "power3.out"
             });
           }
+
           if (desc) {
             gsap.to(desc, {
               height: 0,
               opacity: 0,
               marginTop: "0px",
-              duration: 0.26,
-              overwrite: "auto"
+              duration: 0.3,
+              ease: "power3.out"
             });
           }
+
           if (num) {
             gsap.to(num, {
               color: "#dcdcdc",
               scale: 1,
-              duration: 0.26,
-              ease: "power2.out"
+              rotate: 0,
+              duration: 0.3,
+              ease: "power3.out"
             });
           }
         };
 
-        card.addEventListener("pointerenter", onEnter);
-        card.addEventListener("pointerleave", onLeave);
+        wrapper.addEventListener("pointerenter", onPointerEnter);
+        wrapper.addEventListener("pointerleave", onPointerLeave);
       });
     }, sectionRef);
 
@@ -223,13 +300,13 @@ export function VettingProcess() {
             
             <h2 className="vetting-title">
               <span className="vetting-title-line">
-                <span>Comment nous réalisons</span>
+                {renderSplitText("Comment nous réalisons")}
               </span>
               <span className="vetting-title-line">
-                <span>vos projets de voyage</span>
+                {renderSplitText("vos projets de voyage")}
               </span>
               <span className="vetting-title-line">
-                <span>(sans aucun stress)</span>
+                {renderSplitText("(sans aucun stress)")}
               </span>
             </h2>
 
@@ -243,15 +320,15 @@ export function VettingProcess() {
 
         {/* Right Column (Steps list) */}
         <div className="vetting-right-list">
-          <div className="vetting-cards-list">
-            <span className="vetting-eyebrow-accent">NOTRE ACCOMPAGNEMENT EN 7 ÉTAPES</span>
+          <div className="vetting-cards-list" style={{ perspective: "1500px", transformStyle: "preserve-3d" }}>
+            <span className="vetting-eyebrow-accent">VOTRE ACCOMPAGNEMENT EN 7 ÉTAPES</span>
             
             {steps.map((step) => (
-              <div className="vetting-card-wrapper" key={step.num}>
+              <div className="vetting-card-wrapper" key={step.num} style={{ transformStyle: "preserve-3d" }}>
                 {/* Glow layer behind card */}
                 <div className="vetting-glow"></div>
                 
-                <div className="vetting-card">
+                <div className="vetting-card" style={{ transformStyle: "preserve-3d" }}>
                   <div className="vetting-card-header">
                     <span className="vetting-card-number">{step.num.padStart(2, "0")}</span>
                     <h3 className="vetting-card-title">{step.title}</h3>
